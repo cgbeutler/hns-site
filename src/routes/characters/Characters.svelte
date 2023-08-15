@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { onDestroy } from 'svelte';
     import { hnsCharacters } from "../../lib/stores";
     import { navigate, link } from "svelte-routing";
     import { get } from "svelte/store";

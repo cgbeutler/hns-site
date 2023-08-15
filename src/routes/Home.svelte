@@ -4,6 +4,8 @@
 
   export let location;
   $: console.log(location);
+
+  
 </script>
 
 
@@ -13,6 +15,7 @@
   <p>
     Try out my fancy <Link to="dice">Dice Roller</Link>!
   </p>
+
 </div>
 
 <ExternalNav></ExternalNav>

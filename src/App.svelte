@@ -12,6 +12,8 @@
   import Dice from "./routes/dice/Dice.svelte";
   import AgeRoller from "./routes/dice/ageroller/AgeRoller.svelte";
   import EyeRoller from "./routes/dice/eyeroller/EyeRoller.svelte";
+  import Account from './routes/account/Account.svelte';
+  import Srd from './routes/srd/Srd.svelte';
 
   let viewWidth = 0;
 
@@ -45,6 +47,8 @@
   <Route path="/dice" component={Dice} />
   <Route path="/dice/ageroller" component={AgeRoller} />
   <Route path="/dice/eyeroller" component={EyeRoller} />
+  <Route path="/srd" component={Srd} />
+  <Route path="/account" component={Account} />
 </Router>
 
 <style>
