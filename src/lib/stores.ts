@@ -12,7 +12,7 @@ const HnsKeyPrefix = "HnsCharacters/"
 const isBrowser = typeof window !== 'undefined';
 console.log("IsBrowser: " + isBrowser)
 
-const createAccountStore = async () => {
+const createAccountStore = () => {
   const store = writable<Account>(null);
   const { subscribe, set, update } = store;
 
@@ -165,7 +165,7 @@ const createAccountStore = async () => {
   };
 }
 
-export const account = await createAccountStore();
+export const account = createAccountStore();
 
 
 

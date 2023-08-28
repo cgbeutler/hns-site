@@ -227,8 +227,8 @@ p { font-size: 12pt; margin-top: 6pt; margin-bottom: 2pt; }
     transform: rotate(-180deg);
     position: sticky;
     left: 0px;
-    margin: 0px;
-    padding: 0px;
+    margin: -6px 0px;
+    padding: 5px 0px;
     border: solid rgb(68, 68, 68);
 }
 
