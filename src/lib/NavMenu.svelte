@@ -1,7 +1,7 @@
 <script>
   import { get } from 'svelte/store';
   import { Link } from 'svelte-routing';
-  import { account, hnsCharacters } from "./stores";
+  import { account, hnsCharacterSummaries } from "./stores";
   import LoginBox from './LoginBox.svelte';
     
   function getMainLinkProps({ location, href, isPartiallyCurrent, isCurrent }) {
@@ -24,7 +24,7 @@
     return { class: "ml20 hidden" };
   }
   
-  let charList = $hnsCharacters; // read value with automatic subscription
+  let charList = $hnsCharacterSummaries; // read value with automatic subscription
 
 </script>
 
@@ -57,7 +57,6 @@
     justify-content: stretch;
     align-items: stretch;
     pointer-events: auto;
-    overflow-y: scroll;
     background-color: black;
     height: 100vh;
     min-height: 100vh;
