@@ -3,21 +3,22 @@
 	import { fade } from 'svelte/transition'
   import { Router, Link, link, Route, links } from 'svelte-routing';
   import { Modals, closeModal, openModal, modals } from 'svelte-modals'
-  import NotFound from './routes/NotFound.svelte';
   import NavModal from './lib/NavModal.svelte';
   import NavMenu from "./lib/NavMenu.svelte";
-  import Home from "./routes/Home.svelte";
-  import Characters from './routes/characters/Characters.svelte';
-  import Character from './routes/character/Character.svelte';
-  import Dice from "./routes/dice/Dice.svelte";
-  import AgeRoller from "./routes/dice/ageroller/AgeRoller.svelte";
-  import EyeRoller from "./routes/dice/eyeroller/EyeRoller.svelte";
+
   import Account from './routes/account/Account.svelte';
+  import AgeRoller from "./routes/dice/ageroller/AgeRoller.svelte";
+  import Character from './routes/character/Character.svelte';
+  import Characters from './routes/characters/Characters.svelte';
+  import Dice from "./routes/dice/Dice.svelte";
+  import EyeRoller from "./routes/dice/eyeroller/EyeRoller.svelte";
+  import Home from "./routes/Home.svelte";
+  import NotFound from './routes/NotFound.svelte';
   import Srd from './routes/srd/Srd.svelte';
 
   let viewWidth = 0;
 
-  function onKeyPress(event) {
+  function onKeyPress(event: KeyboardEvent) {
     if (event.repeat) return;
     if (event.key === "Escape") {
       closeModal();
@@ -40,7 +41,7 @@
     <button id="nav-button" on:click={()=>openModal(NavModal)}><img src="/img/HnsSmall.svg" alt="H&S"></button>
   {/if}
     
-  <Route component="{NotFound}" />
+  <Route component={NotFound} />
   <Route path="/" component={Home} />
   <Route path="/character" component={Characters} />
   <Route path="/character/:id" component={Character} />

@@ -1,20 +1,17 @@
 <script lang="ts">
-    import { onDestroy } from 'svelte';
     import { account, hnsCharacterSummaries } from "../../lib/stores";
     import { navigate, link } from "svelte-routing";
-    import { get } from "svelte/store";
-    import { NIL } from "uuid";
 
+    // @ts-ignore Needed by svelte-router
+    export let location: string = "";
+    
     let charList = $hnsCharacterSummaries; // read value with automatic subscription
 
     function goToNewCharacter() {
-        var id = hnsCharacterSummaries.create();
-        if (id == NIL) {
-            console.log("Got nil from create character");
-            return;
-        }
-        console.log("Navigating to '/character/" + id + "'");
-        navigate("/character/" + id);
+        hnsCharacterSummaries.create( (id) => {
+            console.log("Navigating to '/character/" + id + "'");
+            navigate("/character/" + id);
+        });
     }
 </script>
 
@@ -42,7 +39,7 @@
     {:else}
         <div class="char-list">
         {#each Object.entries(charList) as [id, character], i}
-            <a href={"/character/"+id} class="button-outlined char-button" use:link>{get(character).name}</a>
+            <a href={"/character/"+id} class="button-outlined char-button" use:link>{character.name}</a>
         {/each}
         </div>
     {/if}

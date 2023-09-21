@@ -1,14 +1,16 @@
-<script>
+<script lang="ts">
   import { get } from 'svelte/store';
   import { Link } from 'svelte-routing';
   import { account, hnsCharacterSummaries } from "./stores";
   import LoginBox from './LoginBox.svelte';
+  import type { GetPropsParams } from 'svelte-routing/types/Link';
     
-  function getMainLinkProps({ location, href, isPartiallyCurrent, isCurrent }) {
-    if (isPartiallyCurrent) return { class: "curr-path" };
+  function getMainLinkProps(params: GetPropsParams) {
+    if (params.isPartiallyCurrent) return { class: "curr-path" };
     return { class: "" }
   }
-  function getSubLinkProps({ location, href, isPartiallyCurrent, isCurrent }) {
+  function getSubLinkProps(params: GetPropsParams) {
+    let { location, href, isPartiallyCurrent, isCurrent } = params;
     if (isCurrent) return { class: "ml20 active curr-path" };
     if (isPartiallyCurrent) return { class: "ml20 active" }
 
@@ -40,8 +42,8 @@
     <span style="text-align: center;">---</span>
     <Link to="/account" getProps={getMainLinkProps}>My Account</Link>
     <Link to="/character" getProps={getMainLinkProps}>Characters</Link>
-    {#each Object.entries(charList) as [id, character], i}
-      <Link to={"/character/"+id} getProps={getSubLinkProps}>{get(character).name}</Link>
+    {#each Object.entries(charList) as [id, character]}
+      <Link to={"/character/"+id} getProps={getSubLinkProps}>{character.name}</Link>
     {/each}
   </nav>
   <LoginBox />

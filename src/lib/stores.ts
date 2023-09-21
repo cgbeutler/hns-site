@@ -13,7 +13,7 @@ const isBrowser = typeof window !== 'undefined';
 console.log("IsBrowser: " + isBrowser)
 
 const createAccountStore = () => {
-  const store = writable<Account>(null);
+  const store = writable<Account|null>(null);
   const { subscribe, set, update } = store;
 
   fetch(HNS_API_URL + "Api/Account/", {
@@ -36,9 +36,10 @@ const createAccountStore = () => {
     set,
     update,
     
-    createAccount: async ( name, email, password, errorCallback: (errors: string[])=>void ): Promise<string[]> => {
+    createAccount: async ( name: string, email: string, password: string, errorCallback: (errors: string[])=>void ) => {
       if (get(store)) {
-        return [ "Already logged-in. Log out first." ];
+        errorCallback([ "Already logged-in. Log out first." ]);
+        return;
       }
       const response = await fetch(HNS_API_URL + "Api/Account/Create", {
         method: "POST",
@@ -67,7 +68,7 @@ const createAccountStore = () => {
           });
         } break;
         default: {
-          console.error( "Unrecognized response status '" + response.status + ": " + response.statusText + "'" );
+          console.error( `Unrecognized response status ${response.status}: ${response.statusText}.` );
         } break;
       }
     },
@@ -180,7 +181,7 @@ function createCallback_GetCharacters_SetStore(guard: object, set: (this: void, 
     if (guard !== inner) return;
     if (response.ok) {
       response.json().then( l => {
-        let chars: HnsCharacterSummary[] = l.map( o => Object.assign( new HnsCharacterSummary(), o ) )
+        let chars: HnsCharacterSummary[] = l.map( (o: object) => Object.assign( new HnsCharacterSummary(), o ) )
         set( chars )
       });
     }
@@ -198,14 +199,15 @@ const postCharacter = async () => fetch(HNS_API_URL + "Api/Characters/", {
   credentials: 'include',
   headers: { Accept: "application/json" },
 });
-function createCallback_PostCharacter_UpdateStore(guard: object, update: (this: void, updater: Updater<HnsCharacterSummary[]>) => void): (response: Response) => void {
+function createCallback_PostCharacter_UpdateStore(guard: object, update: (this: void, updater: Updater<HnsCharacterSummary[]>) => void, newIdCallback: (id:string)=>void) {
   const inner = guard = {}
-  return (response) => {
+  return (response: Response): void => {
     if (response.ok) {
       response.json().then( o => {
-        if (guard === inner){
-          let newChar: HnsCharacterSummary = o.map( o => Object.assign( new HnsCharacterSummary(), o ) )
+        if (guard === inner) {
+          let newChar: HnsCharacterSummary = o.map( (o: object) => Object.assign( new HnsCharacterSummary(), o ) )
           update( (chars: HnsCharacterSummary[]) => { chars.push(newChar); return chars; } )
+          newIdCallback( newChar.id );
         }
       });
     }
@@ -229,11 +231,11 @@ function loadHnsCharacters() {
   return {
     subscribe,
     refresh: () => { Promise.resolve(getCharacters()).then(createCallback_GetCharacters_SetStore(guard, set)) },
-    create: () => { Promise.resolve(postCharacter()).then(createCallback_PostCharacter_UpdateStore(guard, update)) },
+    create: (newIdCallback: (id:string)=>void) => { Promise.resolve(postCharacter()).then(createCallback_PostCharacter_UpdateStore(guard, update, newIdCallback)) },
   };
 }
 
-export const hnsCharacterSummaries: Readable<HnsCharacterSummary[]> = loadHnsCharacters();
+export const hnsCharacterSummaries = loadHnsCharacters();
 
 
 // _____ /Character/:id ____

@@ -2,10 +2,8 @@
   import Link from "../lib/Link.svelte";
   import ExternalNav from "../lib/ExternalNav.svelte";
 
-  export let location;
-  $: console.log(location);
-
-  
+  export let location: string = "/";
+  $: console.log(location);  
 </script>
 
 

@@ -9,7 +9,7 @@
     export let id: string = NIL;
     $: console.log( "id = '" + id + "'" )
 
-    let character: Writable<HnsCharacter> = null;
+    let character: Writable<HnsCharacter>;
     $: character = id == "local" ? localCharacter : getHnsCharacter(id)
 
     // TODO: Figure out how to nav back when in invalid id
@@ -25,7 +25,7 @@
         // }
     });
 
-    let nameInput;
+    let nameInput: HTMLInputElement;
     $: if (nameInput) {
         let name = $character.name;
         if (name.length == 0) { nameInput.style.width = "Unnamed Character".length + "ch"; }
@@ -43,16 +43,16 @@
         <br/>
         <hr>
         Description
-        {$character.description}
+        {$character.background.description}
     </div>
     <div class="page">
         <h2>Sways</h2>
         <div class="scrollbox">
             <div class="roll-grid">
-                {#each [... $character.sways()] as sway }
+                {#each Object.entries($character.socialProfile.stats) as [stat, {mod}] }
                     <div class="grid-stat">
-                        <h3>{sway.name}</h3>
-                        <button><img src="/img/d6-char-sheet/d6-white-{sway.level}.png" width="74" alt="[{sway.level} white]"></button>
+                        <h3>{stat}</h3>
+                        <button><img src="/img/dice/d20.png" width="74" alt="">+{mod}</button>
                     </div>
                 {/each}
             </div>
@@ -70,11 +70,11 @@
 
                 <div class="grid-stat grid-stat-sticky-top">
                     <h3>Might</h3>
-                    <button><img src="/img/d6-char-sheet/d6-white-{$character.mig}.png" width="74" alt="[{$character.mig} white]"></button>
+                    <button><img src="/img/d6-char-sheet/d6-white-{$character.baseMight}.png" width="74" alt="[{$character.baseMight} white]"></button>
                 </div>
                 <div class="grid-stat grid-stat-sticky-top">
                     <h3>Finesse</h3>
-                    <button><img src="/img/d6-char-sheet/d6-white-{$character.fin}.png" width="74" alt="[{$character.fin} white]"></button>
+                    <button><img src="/img/d6-char-sheet/d6-white-{$character.baseFinesse}.png" width="74" alt="[{$character.baseFinesse} white]"></button>
                 </div>
                 <div class="grid-stat grid-stat-sticky-top">
                     <h3>Artifice</h3>
@@ -82,7 +82,7 @@
                 </div>
                 <div class="grid-stat grid-stat-sticky-top">
                     <h3>Tuning</h3>
-                    <button><img src="/img/d6-char-sheet/d6-white-{$character.tun}.png" width="74" alt="[{$character.tun} white]"></button>
+                    <button><img src="/img/d6-char-sheet/d6-white-{$character.baseTuning}.png" width="74" alt="[{$character.baseTuning} white]"></button>
                 </div>
 
                 

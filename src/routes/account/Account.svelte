@@ -1,6 +1,8 @@
 <script lang="ts">
     import { get } from "svelte/store";
     import { account } from "../../lib/stores";
+    
+    export let location: string = "";
 
     let name = "";
     let updatingName = false;
@@ -17,12 +19,12 @@
     function toggleNameChange() {
         updatingName = !updatingName;
         if (!updatingName) name = "";
-        else name = get(account).name;
+        else name = get(account)?.name ?? "";
     }
     function toggleEmailChange() {
         updatingEmail = !updatingEmail;
         if (!updatingEmail) email = "";
-        else email = get(account).email;
+        else email = get(account)?.email ?? "";
     }
     function togglePasswordChange() {
         updatingPassword = !updatingPassword;
