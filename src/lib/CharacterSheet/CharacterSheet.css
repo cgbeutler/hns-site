@@ -1,0 +1,12 @@
+
+.sheet-block {
+    background-color: #000000;
+    color: #FDF6E3;
+    margin: 4px;
+    padding: 10px;
+    align-items: center;
+    text-align: center;
+    border-radius: 8px;
+    border: 8px solid rgba(0, 0, 0, 0.75);
+    background-clip: padding-box;
+  }

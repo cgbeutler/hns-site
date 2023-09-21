@@ -13,9 +13,9 @@ export interface SocialSkill { stat: SocialStatStrings; mod: number; }
 
 export class SocialProfile {
     public readonly stats: { [name: string]: Stat } = {
-        Pressure: { mod: 0 },
-        Captivation: { mod: 0 },
-        Credibility: { mod: 0 },
+        Pressure: { mod: 1 },
+        Captivation: { mod: 1 },
+        Credibility: { mod: 1 },
     }
 
     public readonly passives: { [name: string]: SocialSkill } = {
@@ -24,9 +24,13 @@ export class SocialProfile {
         Insight: { stat: "Credibility", mod: 0 },
     }
     public readonly sways: { [name: string]: SocialSkill } = {
-        Provocation: { stat: "Pressure", mod: 0 }, Poignancy: { stat: "Captivation", mod: 0 },
-        Parlaying: { stat: "Pressure", mod: 0 }, Candor: { stat: "Credibility", mod: 0 },
-        Enthrallment: { stat: "Captivation", mod: 0 }, Deception: { stat: "Credibility", mod: 0 },
+        Provocation: { stat: "Pressure", mod: 0 },
+        Enthrallment: { stat: "Captivation", mod: 0 },
+        Candor: { stat: "Credibility", mod: 0 },
+
+        Parlaying: { stat: "Pressure", mod: 0 },
+        Poignancy: { stat: "Captivation", mod: 0 },
+        Deception: { stat: "Credibility", mod: 0 },
     }
 }
 
@@ -35,9 +39,9 @@ export interface ExplorerSkill { stat: ExplorerStatStrings; mod: number; }
 
 export class ExplorerProfile {
     public readonly stats: { [name: string]: Stat } = {
-        Might: { mod: 0 },
-        Finesse: { mod: 0 },
-        Tuning: { mod: 0 },
+        Might: { mod: 1 },
+        Finesse: { mod: 1 },
+        Tuning: { mod: 1 },
     }
 
     public readonly saves: { [name: string]: ExplorerSkill } = {
@@ -51,19 +55,31 @@ export class ExplorerProfile {
         Sensing: { stat: "Tuning", mod: 0 },
     }
     public readonly explorations: { [name: string]: ExplorerSkill } = {
-        Athletics: { stat: "Might", mod: 0 }, Hiding: { stat: "Might", mod: 0 },
-        Tinkering: { stat: "Finesse", mod: 0 }, Stealth: { stat: "Finesse", mod: 0 },
-        Rituals: { stat: "Tuning", mod: 0 }, Sleight: { stat: "Tuning", mod: 0 },
+        Athletics: { stat: "Might", mod: 0 },
+        Tinkering: { stat: "Finesse", mod: 0 },
+        Rituals: { stat: "Tuning", mod: 0 },
+
+        Sleight: { stat: "Might", mod: 0 },
+        Stealth: { stat: "Finesse", mod: 0 },
+        Hiding: { stat: "Tuning", mod: 0 },
     }
     public readonly knowledges: { [name: string]: ExplorerSkill } = {
-        Security: { stat: "Might", mod: 0 }, Wayfaring: { stat: "Might", mod: 0 },
-        History: { stat: "Finesse", mod: 0 }, Rumor: { stat: "Finesse", mod: 0 },
-        Discordance: { stat: "Tuning", mod: 0 }, Harmony: { stat: "Tuning", mod: 0 },
+        Security: { stat: "Might", mod: 0 },
+        History: { stat: "Finesse", mod: 0 },
+        Discordance: { stat: "Tuning", mod: 0 },
+
+        Wayfaring: { stat: "Might", mod: 0 },
+        Rumor: { stat: "Finesse", mod: 0 },
+        Harmony: { stat: "Tuning", mod: 0 },
     }
     public readonly equipments: { [name: string]: ExplorerSkill } = {
-        Heavy: { stat: "Might", mod: 0 }, Simple: { stat: "Might", mod: 0 },
-        Complex: { stat: "Finesse", mod: 0 }, Light: { stat: "Finesse", mod: 0 },
-        Dissonant: { stat: "Tuning", mod: 0 }, Harmonic: { stat: "Tuning", mod: 0 },
+        Heavy: { stat: "Might", mod: 0 },
+        Complex: { stat: "Finesse", mod: 0 },
+        Dissonant: { stat: "Tuning", mod: 0 },
+
+        Simple: { stat: "Might", mod: 0 },
+        Light: { stat: "Finesse", mod: 0 },
+        Harmonic: { stat: "Tuning", mod: 0 },
     }
 }
 
