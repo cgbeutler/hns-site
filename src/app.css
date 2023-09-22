@@ -70,6 +70,19 @@ h1 + h2 {
   text-align: center;
 }
 
+h2,
+h3,
+h4 {
+    margin-top: 6pt; margin-bottom: 2pt;
+    font-weight: normal; font-variant-caps: all-small-caps;
+}
+
+h2 { font-size: 18pt; }
+h3 { font-size: 16pt; }
+h4 { font-size: 14pt; }
+p { font-size: 12pt; margin-top: 6pt; margin-bottom: 2pt; }
+
+
 
 #nav-button {
   display: block;
@@ -159,6 +172,7 @@ h1 + h2 {
 }
 
 .sheet-block {
+  display: block;
   background-color: #000000;
   color: #FDF6E3;
   margin: 4px;
@@ -232,6 +246,47 @@ button.bright-red,
   border: 2px solid rgb(204, 204, 204);
 }
 
+
+.toggle-bg {
+  display: inline-flex;
+  flex-wrap: wrap;
+  flex-shrink: 1;
+  flex-grow: 0;
+  justify-content: center;
+  justify-self: center;
+  align-self: center;
+  background-color: #222222;
+  padding: 2px 4px;
+  margin: 4px;
+  border-top: 2px solid #202020;
+  border-bottom: 2px solid #2a2a2a;
+  border-radius: 12px;
+  gap: 4px;
+}
+.toggle-bg a {
+  display: inline-block;
+  background-color: #333333;
+  color: #dddddd;
+  padding: 0px 10px;
+  margin: 2px 0px 2px 2px;
+  border-radius: 10px;
+  border-top: 2px solid #3f3f3f;
+  border-bottom: 2px solid #2a2a2a;
+}
+.toggle-bg a.active {
+  padding: 2px 12px;
+  margin: 0px;
+  background-color: #444444;
+  color: #eeeeee;
+  border-top: 2px solid #555555;
+  border-bottom: 2px solid #383838;
+}
+.toggle-bg a:visited {
+  color: #dddddd;
+}
+.toggle-bg a.active:visited {
+  color: #eeeeee;
+}
 
 
 .mb-0 {

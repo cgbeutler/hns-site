@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import type { Writable } from "svelte/store";
-    import type { HnsCharacter } from "../HnsCharacter";
+    import type { HnsCharacter } from "../../../lib/HnsCharacter";
 
     let error: string|undefined = undefined;
     export let character: Writable<HnsCharacter>;

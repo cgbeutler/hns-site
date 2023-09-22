@@ -44,7 +44,7 @@
   <Route component={NotFound} />
   <Route path="/" component={Home} />
   <Route path="/character" component={Characters} />
-  <Route path="/character/:id" component={Character} />
+  <Route path="/character/:id/*" component={Character} />
   <Route path="/dice" component={Dice} />
   <Route path="/dice/ageroller" component={AgeRoller} />
   <Route path="/dice/eyeroller" component={EyeRoller} />

@@ -1,12 +1,13 @@
 <script lang="ts">
     import { localCharacter, getHnsCharacter } from '../../lib/stores'
     import { onMount } from 'svelte';
-    import { navigate } from 'svelte-routing';
+    import { Link, Route, Router, navigate } from 'svelte-routing';
     import { NIL, validate } from 'uuid';
     import type { Writable } from 'svelte/store';
     import type { HnsCharacter } from '../../lib/HnsCharacter';
-    import SocialSkills from '../../lib/CharacterSheet/Skills.svelte';
-    import Builder from '../../lib/CharacterSheet/Builder.svelte';
+    import type { GetPropsParams } from 'svelte-routing/types/Link';
+    import BuildView from './build-view/BuildView.svelte';
+    import PlayView from './play-view/PlayView.svelte';
 
     export let id: string = NIL;
     $: console.log( "id = '" + id + "'" )
@@ -14,20 +15,24 @@
     let character: Writable<HnsCharacter>;
     $: character = id == "local" ? localCharacter : getHnsCharacter(id)
 
-    // TODO: Figure out how to nav back when in invalid id
     onMount(async () => {
+        if (window.location.pathname.endsWith(`/character/${id}`) || window.location.pathname.endsWith(`/character/${id}/`)) {
+            console.log("redirecting to play view")
+            navigate( `/character/${id}/play`, {replace:true} );
+            return;
+        }
         if (id !== "local" && !validate(id)) { 
             console.error( "Failed to load character iwht id '" + id + "'" );
             navigate( "/characters" );
             return;
         }
-        // if (!character) {
-        //     console.error( "Failed to load character with id '" + id + "' or character was deleted" );
-        //     navigate( "/characters", { replace: true } );
-        // }
     });
 
-    let page = 1;
+    function getLinkProps(params: GetPropsParams) {
+        let { location, href, isPartiallyCurrent, isCurrent } = params;
+        if (isCurrent || isPartiallyCurrent) return { class: "active" };
+        return { class: "" }
+    }
 </script>
 
 {#if !character || $character == null}
@@ -36,24 +41,23 @@
     </div>
 {:else}
 
-    <div class="page">
-        <p id="name-label">{$character.name && $character.name.length>0 ? $character.name : "Unnamed Character"}</p>
-        <div>
-            <button on:click={()=>page=0}>Builder</button>
-            <button on:click={()=>page=0}>Background</button>
-            <button on:click={()=>page=0}>Feats</button>
+    <div class="sheet-block" style="display: flex; flex-direction: row; flex-wrap: nowrap;">
+        <div style="display:flex; flex-direction: column;">
+            <p id="name-label">{$character.name && $character.name.length>0 ? $character.name : "Unnamed Character"}</p>
+            <div class="toggle-bg">
+                <Link to="/character/{id}/build" getProps={getLinkProps}>Build</Link>
+                <Link to="/character/{id}/play" getProps={getLinkProps}>Play</Link>
+            </div>
         </div>
         <div>
-            <button on:click={()=>page=1}>Skills</button>
-            <button on:click={()=>page=1}>Actitons</button>
-            <button on:click={()=>page=1}>Inventory</button>
+            HP Display
         </div>
     </div>
-    {#if page == 0}
-        <Builder bind:character={character}></Builder>
-    {:else if page == 1}
-        <SocialSkills bind:character={character}></SocialSkills>
-    {/if}
+    
+    <Router>
+        <Route path="/build/*"> <BuildView bind:id={id} bind:character={character}/> </Route>
+        <Route path="/play/*"> <PlayView bind:id={id} bind:character={character}/> </Route>
+    </Router>
 {/if}
 
 <style>
@@ -70,4 +74,5 @@ p { font-size: 12pt; margin-top: 6pt; margin-bottom: 2pt; }
     border: 0px;
     background-color: transparent;
 }
+
 </style>

@@ -102,21 +102,6 @@
 
 <style>
 
-
-h1,
-h2,
-h3,
-h4 {
-    margin-top: 6pt; margin-bottom: 2pt;
-    font-weight: normal; font-variant-caps: all-small-caps;
-}
-
-h1 { font-size: 20pt; }
-h2 { font-size: 18pt; }
-h3 { font-size: 16pt; }
-h4 { font-size: 14pt; }
-p { font-size: 12pt; margin-top: 6pt; margin-bottom: 2pt; }
-
 .roll-grid {
     display: grid;
     background-color: black;
@@ -157,13 +142,15 @@ p { font-size: 12pt; margin-top: 6pt; margin-bottom: 2pt; }
     align-content: flex-start;
     background-color: #222222;
     margin: 0px;
-    padding: 4px 4px 4px 10px;
+    padding: 4px;
     border-radius: 1px;
 }
 
 .grid-stat p {
     flex-grow: 1;
     text-align: left;
+    margin: auto 0px;
+    padding: 0px 6px;
 }
 
 
@@ -202,6 +189,7 @@ p { font-size: 12pt; margin-top: 6pt; margin-bottom: 2pt; }
         justify-content: flex-start;
         align-items: center;
         align-content: flex-end;
+        padding: 10px 0px;
     }
 }
 
