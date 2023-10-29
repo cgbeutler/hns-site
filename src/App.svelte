@@ -1,8 +1,7 @@
 <script lang="ts">
-  import { onDestroy, onMount } from 'svelte';
 	import { fade } from 'svelte/transition'
-  import { Router, Link, link, Route, links } from 'svelte-routing';
-  import { Modals, closeModal, openModal, modals } from 'svelte-modals'
+  import { Router, Route } from 'svelte-routing';
+  import { Modals, closeModal, openModal } from 'svelte-modals'
   import NavModal from './lib/NavModal.svelte';
   import NavMenu from "./lib/NavMenu.svelte";
 

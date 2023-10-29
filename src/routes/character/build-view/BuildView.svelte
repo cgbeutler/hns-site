@@ -35,7 +35,7 @@
         <div class="toggle-bg">
             <Link to="/character/{id}/build/background" getProps={getLinkProps}>1. Background</Link>
             <Link to="/character/{id}/build/class" getProps={getLinkProps}>2. Class</Link>
-            <Link to="/character/{id}/build/inventory" getProps={getLinkProps}>3. Inventory</Link>
+            <Link to="/character/{id}/build/stats" getProps={getLinkProps}>3. Stats</Link>
         </div>
     </div>
     

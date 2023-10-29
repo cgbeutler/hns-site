@@ -34,6 +34,14 @@ export class SocialFeat extends Feat {
     public get compendium() { return SocialFeats }
 }
 
+export class Background {
+    public name: string = "";
+    public description: string = "";
+
+    public constitution: ConstitutionFeat | undefined;
+    public traits: Array<TraitFeat> = [];
+    public socialFeats: Array<SocialFeat> = [];
+}
 
 
 export interface Stat { mod: number; }
@@ -123,42 +131,11 @@ export class HnsCharacter {
         this._id = value;
     }
 
-    
-    //# Background
+    public readonly background: Background = new Background();
 
-    //## Description
-    public name: string = "";
-    public description: string = "";
+    public get name(): string { return this.background.name; }
+    public set name(value: string) { this.background.name = value; }
 
-    //## Feats
-    public constitutionFeat: ConstitutionFeat | undefined;
-    public traitFeats: Array<TraitFeat> = [];
-    public socialFeats: Array<SocialFeat> = [];
-
-
-    //# Skill Profiles
-    //## Generation Methods
-    public socialGeneration: "manual" | "roles" | "roll" | "buy" = "manual";
-    // These are shared across the methods.
-    public socialGen_Feat: SocialFeat | undefined;
-    public socialGen_ExtraSkill: string | undefined;
-    //### Manual Generation
-    public readonly socialGen_Manual_Stats: { [name: string]: Stat } = {
-        Pressure: { mod: 0 },
-        Captivation: { mod: 0 },
-        Credibility: { mod: 0 },
-    }
-    //### Role Generation
-    public socialGen_Role_Id: string = NIL
-    //### Roll Generation
-    public socialGen_Roll_Array: [number, number, number] | undefined;
-    public socialGen_Roll_Assignments: ["Pressure"|"Captivation"|"Credibility", "Pressure"|"Captivation"|"Credibility", "Pressure"|"Captivation"|"Credibility"] | undefined;
-    //### Buy Generation
-    public socialGen_Buy_Spending: { [name: string]: number } = {
-        Pressure: 0,
-        Captivation: 0,
-        Credibility: 0,
-    }
 
     // ____ Standalone Values ____
     // The values stored in these are the raw or core values that are then

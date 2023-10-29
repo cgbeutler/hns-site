@@ -2,6 +2,8 @@
     import { onMount } from "svelte";
     import type { Writable } from "svelte/store";
     import type { HnsCharacter } from "../../../lib/HnsCharacter";
+    import FeatDisplay from "../../../lib/CharacterSheet/FeatDisplay.svelte";
+    import { ConstitutionFeats } from "../../../lib/HnsCompendium";
 
     let error: string|undefined = undefined;
     export let character: Writable<HnsCharacter>;
@@ -31,6 +33,9 @@
         <br>
         <label for="description"><h4>Description:</h4></label>
         <p id="description" bind:innerHTML={$character.background.description} contenteditable></p>
+        <br>
+        <label for="constitution"><h4>Constitution Feat:</h4></label>
+        <FeatDisplay bind:feat={$character.background.constitution} options={ConstitutionFeats}/>
     </div>
 {/if}
 

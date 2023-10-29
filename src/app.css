@@ -263,7 +263,8 @@ button.bright-red,
   border-radius: 12px;
   gap: 4px;
 }
-.toggle-bg a {
+.toggle-bg a,
+.toggle-bg button {
   display: inline-block;
   background-color: #333333;
   color: #dddddd;
@@ -273,7 +274,8 @@ button.bright-red,
   border-top: 2px solid #3f3f3f;
   border-bottom: 2px solid #2a2a2a;
 }
-.toggle-bg a.active {
+.toggle-bg a.active,
+.toggle-bg button.active {
   padding: 2px 12px;
   margin: 0px;
   background-color: #444444;
