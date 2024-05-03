@@ -1,9 +1,6 @@
 <script lang="ts">
     import { account, hnsCharacterSummaries } from "../../lib/stores";
     import { navigate, link } from "svelte-routing";
-
-    // @ts-ignore Needed by svelte-router
-    export let location: string = "";
     
     let charList = $hnsCharacterSummaries; // read value with automatic subscription
 

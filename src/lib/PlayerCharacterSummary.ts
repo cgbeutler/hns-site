@@ -1,7 +1,7 @@
 import { validate, NIL } from 'uuid'
 
 
-export class HnsCharacterSummary {
+export class PlayerCharacterSummary {
 
     private _id: string = "";
     public get id(): string { return this._id; }
@@ -12,12 +12,10 @@ export class HnsCharacterSummary {
 
     public name: string = "";
     public class: string = "";
-    public subclass: string = "";
-    public class2: string = "";
-    public subclass2: string = "";
+    public lineage: string = "";
 
-    public static FromJson( json: string ): HnsCharacterSummary {
-        return Object.assign( new HnsCharacterSummary(), JSON.parse(json) )
+    public static FromJson( json: string ): PlayerCharacterSummary {
+        return Object.assign( new PlayerCharacterSummary(), JSON.parse(json) )
     }
 }
 

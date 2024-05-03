@@ -31,7 +31,7 @@
 
 <Router>
   <Modals>
-    <div slot="backdrop" class="backdrop" transition:fade on:click={closeModal} on:keypress={onKeyPress} />
+    <div slot="backdrop" class="backdrop" transition:fade on:click={closeModal} on:keypress={onKeyPress} role="none" />
   </Modals>
 
   {#if viewWidth >= 1000}

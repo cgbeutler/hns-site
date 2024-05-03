@@ -1,7 +1,7 @@
 <script lang="ts">
     import { openModal } from "svelte-modals";
     import ConfirmModal from "./ConfirmModal.svelte";
-    import { ConstitutionFeat } from "../HnsCharacter";
+    import { ConstitutionFeat } from "../PlayerCharacter";
     import type { ConstitutionFeatDescription, FeatDescription } from "../HnsCompendium";
     import FeatSelectModal from "./FeatSelectModal.svelte";
 

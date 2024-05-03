@@ -1,12 +1,12 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import type { Writable } from "svelte/store";
-    import type { HnsCharacter } from "../../../lib/HnsCharacter";
+    import type { PlayerCharacter } from "../../../lib/PlayerCharacter";
     import FeatDisplay from "../../../lib/CharacterSheet/FeatDisplay.svelte";
     import { ConstitutionFeats } from "../../../lib/HnsCompendium";
 
     let error: string|undefined = undefined;
-    export let character: Writable<HnsCharacter>;
+    export let character: Writable<PlayerCharacter>;
     onMount(async () => {
         if (!character) { 
             error = `Failed to load character`
@@ -31,17 +31,19 @@
             <h4 style="display:inline-block">Character Name:</h4> <input placeholder="Unnamed Character" bind:value={$character.name}>
         </label>
         <br>
+        <!-- TODO:
         <label for="description"><h4>Description:</h4></label>
         <p id="description" bind:innerHTML={$character.background.description} contenteditable></p>
         <br>
         <label for="constitution"><h4>Constitution Feat:</h4></label>
-        <FeatDisplay bind:feat={$character.background.constitution} options={ConstitutionFeats}/>
+        <FeatDisplay bind:feat={$character.background.constitution} options={ConstitutionFeats}/> -->
     </div>
 {/if}
 
 <style src="CharacterSheet.css">
 
 .sheet-block {
+    display: flex;
     text-align: left;
 }
 

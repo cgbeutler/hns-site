@@ -1,8 +1,6 @@
 <script lang="ts">
     import type { SvelteComponent } from 'svelte';
     import Die from '../../../lib/Die.svelte';
-    
-    export let location: string = "";
 
     let diceData :Array<{id :number, result :number, active :boolean}> = [{
             id: 0,

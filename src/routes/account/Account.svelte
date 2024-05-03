@@ -1,8 +1,6 @@
 <script lang="ts">
     import { get } from "svelte/store";
     import { account } from "../../lib/stores";
-    
-    export let location: string = "";
 
     let name = "";
     let updatingName = false;

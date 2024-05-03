@@ -1,16 +1,20 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import type { Writable } from 'svelte/store';
-    import type { HnsCharacter } from '../HnsCharacter';
+    import { type PlayerCharacter } from '../PlayerCharacter';
 
     let error: string|undefined = undefined;
-    export let character: Writable<HnsCharacter>;
+    export let character: Writable<PlayerCharacter>;
     onMount(async () => {
         if (!character) { 
             error = `Failed to load character`
             return;
         }
     });
+
+    function toModString( n: number ): string {
+        return (n < 0 ? "" : "+") + n;
+    }
 </script>
 
 {#if error}
@@ -24,75 +28,55 @@
     </div>
 {:else}
     <div class="sheet-block">
-        <h2>Social Skills</h2>
         <div>
             <div class="roll-grid">
-                {#each Object.entries($character.socialProfile.stats) as [stat, {mod}] }
+                <h2>Social Skills</h2>
+                {#each Object.entries($character.stats).slice(0,3) as [stat, {mod}] }
                     <div class="grid-stat">
                         <p style="text-align: center;">{stat}</p>
-                        <button class="passive-button">+{mod}</button>
+                        <button class="passive-button">{toModString(mod)}</button>
                     </div>
                 {/each}
-                <h4>Passives</h4>
-                {#each Object.entries($character.socialProfile.passives) as [skill, {mod, stat}] }
+                <h4>Major Skills</h4>
+                {#each Object.keys($character.socialSkills).slice(0,3) as skill }
                     <div class="grid-stat">
                         <p>{skill}</p>
-                        <button class="passive-button">&gt;{8 + mod + $character.socialProfile.stats[stat].mod}</button>
+                        <button class="skill-button">{toModString($character.GetSocialSkill(skill))}</button>
                     </div>
                 {/each}
-                <h4>Sways</h4>
-                {#each Object.entries($character.socialProfile.sways) as [skill, {mod, stat}] }
+                <h4>Minor Skills</h4>
+                {#each Object.keys($character.socialSkills).slice(3) as skill }
                     <div class="grid-stat">
                         <p>{skill}</p>
-                        <button class="skill-button">+{mod + $character.socialProfile.stats[stat].mod}</button>
+                        <button class="skill-button">{toModString($character.GetSocialSkill(skill))}</button>
                     </div>
                 {/each}
             </div>
             <p>Social ability listed here</p>
         </div>
-        <br>
-        <h2>Exploration Skills</h2>
+    </div>
+    <div class="sheet-block">
         <div>
             <div class="roll-grid">
-                {#each Object.entries($character.explorerProfile.stats) as [stat, {mod}] }
+                <h2>Exploration Skills</h2>
+                {#each Object.entries($character.stats).slice(3) as [stat, {mod}] }
                     <div class="grid-stat">
                         <p style="text-align: center;">{stat}</p>
-                        <button class="passive-button">+{mod}</button>
+                        <button class="passive-button">{toModString(mod)}</button>
                     </div>
                 {/each}
-                <h4>Saves</h4>
-                {#each Object.entries($character.explorerProfile.saves) as [skill, {mod, stat}] }
+                <h4>Major Skills</h4>
+                {#each Object.keys($character.explorationSkills).slice(0,6) as skill }
                     <div class="grid-stat">
                         <p>{skill}</p>
-                        <button class="passive-button">&gt;{8 + mod + $character.explorerProfile.stats[stat].mod}</button>
+                        <button class="skill-button">{toModString($character.GetExplorationSkill(skill))}</button>
                     </div>
                 {/each}
-                <h4>Perceptions</h4>
-                {#each Object.entries($character.explorerProfile.perceptions) as [skill, {mod, stat}] }
+                <h4>Minor Skills</h4>
+                {#each Object.keys($character.explorationSkills).slice(6) as skill }
                     <div class="grid-stat">
                         <p>{skill}</p>
-                        <button class="passive-button">&gt;{8 + mod + $character.explorerProfile.stats[stat].mod}</button>
-                    </div>
-                {/each}
-                <h4>Exploration</h4>
-                {#each Object.entries($character.explorerProfile.explorations) as [skill, {mod, stat}] }
-                    <div class="grid-stat">
-                        <p>{skill}</p>
-                        <button class="skill-button">+{mod + $character.explorerProfile.stats[stat].mod}</button>
-                    </div>
-                {/each}
-                <h4>Knowledge</h4>
-                {#each Object.entries($character.explorerProfile.knowledges) as [skill, {mod, stat}] }
-                    <div class="grid-stat">
-                        <p>{skill}</p>
-                        <button class="skill-button">+{mod + $character.explorerProfile.stats[stat].mod}</button>
-                    </div>
-                {/each}
-                <h4>Equipment</h4>
-                {#each Object.entries($character.explorerProfile.equipments) as [skill, {mod, stat}] }
-                    <div class="grid-stat">
-                        <p>{skill}</p>
-                        <button class="skill-button">+{mod + $character.explorerProfile.stats[stat].mod}</button>
+                        <button class="skill-button">{toModString($character.GetExplorationSkill(skill))}</button>
                     </div>
                 {/each}
             </div>
@@ -113,6 +97,25 @@
     column-gap: 4px;
     margin: 0px;
     padding: 2px;
+}
+
+.roll-grid > h2 {
+    background-color: #111111;
+    color: #99998f;
+    width: auto;
+    font-size: 30px;
+    line-height: 40px;
+    text-align: center;
+    margin: 0px;
+    padding-bottom: 5px;
+    grid-column-start: 1;
+    grid-column-end: 4;
+    border-top: 2px solid #181818;
+    border-radius: 14px 14px 2px 2px;
+}
+
+.roll-grid > h2:first-child {
+    margin-top: 0px;
 }
 
 .roll-grid > h4 {

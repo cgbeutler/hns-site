@@ -1,14 +1,14 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import type { Writable } from 'svelte/store';
-    import type { HnsCharacter } from '../../../lib/HnsCharacter';
+    import type { PlayerCharacter } from '../../../lib/PlayerCharacter';
     import { Link, Route, Router } from 'svelte-routing';
     import type { GetPropsParams } from 'svelte-routing/types/Link';
     import BackgroundBuilder from './BackgroundBuilder.svelte';
     import StatBuilder from './StatBuilder.svelte';
 
     export let id: string;
-    export let character: Writable<HnsCharacter>;
+    export let character: Writable<PlayerCharacter>;
     let error: string | undefined;
 
     onMount(async () => { error = !!character || $character == null ? undefined : `Failed to load character`; });
@@ -33,9 +33,9 @@
     <div class="sheet-block" style="text-align:center;">
         <h4>Build Steps:</h4>
         <div class="toggle-bg">
-            <Link to="/character/{id}/build/background" getProps={getLinkProps}>1. Background</Link>
-            <Link to="/character/{id}/build/class" getProps={getLinkProps}>2. Class</Link>
-            <Link to="/character/{id}/build/stats" getProps={getLinkProps}>3. Stats</Link>
+            <Link to="/character/{id}/build/stats" getProps={getLinkProps}>1. Stats</Link>
+            <Link to="/character/{id}/build/archetypes" getProps={getLinkProps}>2. Archetype</Link>
+            <Link to="/character/{id}/build/background" getProps={getLinkProps}>3. Background</Link>
         </div>
     </div>
     
@@ -48,6 +48,7 @@
 <style src="CharacterSheet.css">
 
     .sheet-block {
+        display: flex;
         text-align: left;
     }
     

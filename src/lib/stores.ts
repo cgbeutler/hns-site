@@ -1,6 +1,6 @@
 // import { persisted } from 'svelte-local-storage-store'
-import { HnsCharacter } from './HnsCharacter'
-import { HnsCharacterSummary } from './HnsCharacterSummary'
+import { PlayerCharacter } from './PlayerCharacter'
+import { PlayerCharacterSummary } from './PlayerCharacterSummary'
 import { validate, v4 as uuidv4, NIL } from 'uuid';
 import { get, writable, type Readable, type Writable, type Updater } from 'svelte/store'
 import { Account } from './Account';
@@ -175,13 +175,13 @@ const getCharacters = async () => fetch(HNS_API_URL + "Api/Characters/", {
   credentials: 'include',
   headers: { Accept: "application/json" },
 });
-function createCallback_GetCharacters_SetStore(guard: object, set: (this: void, value: HnsCharacterSummary[]) => void): (response: Response) => void {
+function createCallback_GetCharacters_SetStore(guard: object, set: (this: void, value: PlayerCharacterSummary[]) => void): (response: Response) => void {
   const inner = guard = {}
   return (response) => {
     if (guard !== inner) return;
     if (response.ok) {
       response.json().then( l => {
-        let chars: HnsCharacterSummary[] = l.map( (o: object) => Object.assign( new HnsCharacterSummary(), o ) )
+        let chars: PlayerCharacterSummary[] = l.map( (o: object) => Object.assign( new PlayerCharacterSummary(), o ) )
         set( chars )
       });
     }
@@ -199,14 +199,14 @@ const postCharacter = async () => fetch(HNS_API_URL + "Api/Characters/", {
   credentials: 'include',
   headers: { Accept: "application/json" },
 });
-function createCallback_PostCharacter_UpdateStore(guard: object, update: (this: void, updater: Updater<HnsCharacterSummary[]>) => void, newIdCallback: (id:string)=>void) {
+function createCallback_PostCharacter_UpdateStore(guard: object, update: (this: void, updater: Updater<PlayerCharacterSummary[]>) => void, newIdCallback: (id:string)=>void) {
   const inner = guard = {}
   return (response: Response): void => {
     if (response.ok) {
       response.json().then( o => {
         if (guard === inner) {
-          let newChar: HnsCharacterSummary = o.map( (o: object) => Object.assign( new HnsCharacterSummary(), o ) )
-          update( (chars: HnsCharacterSummary[]) => { chars.push(newChar); return chars; } )
+          let newChar: PlayerCharacterSummary = o.map( (o: object) => Object.assign( new PlayerCharacterSummary(), o ) )
+          update( (chars: PlayerCharacterSummary[]) => { chars.push(newChar); return chars; } )
           newIdCallback( newChar.id );
         }
       });
@@ -220,7 +220,7 @@ function createCallback_PostCharacter_UpdateStore(guard: object, update: (this: 
 
 
 function loadHnsCharacters() {
-  var characters: HnsCharacterSummary[] = [];
+  var characters: PlayerCharacterSummary[] = [];
 
   const { subscribe, set, update } = writable(characters)
 
@@ -245,12 +245,12 @@ const getCharacter = async (id: string) => fetch(HNS_API_URL + "Api/Characters/"
   credentials: 'include',
   headers: { Accept: "application/json" },
 });
-function createCallback_GetCharacter_SetStore(guard: object, set: (this: void, value: HnsCharacter) => void): (response: Response) => void {
+function createCallback_GetCharacter_SetStore(guard: object, set: (this: void, value: PlayerCharacter) => void): (response: Response) => void {
   const inner = guard = {}
   return (response) => {
     if (guard !== inner) return;
     if (response.ok) {
-      response.json().then( o => { set( Object.assign( new HnsCharacter(), o ) ) });
+      response.json().then( o => { set( Object.assign( new PlayerCharacter(), o ) ) });
     }
     else {
       console.log( response.statusText );
@@ -259,7 +259,7 @@ function createCallback_GetCharacter_SetStore(guard: object, set: (this: void, v
 };
 
 
-const putCharacter = async (character: HnsCharacter) => fetch(HNS_API_URL + "Api/Characters/" + character.id, {
+const putCharacter = async (character: PlayerCharacter) => fetch(HNS_API_URL + "Api/Characters/" + character.id, {
   method: "PUT",
   credentials: 'include',
   headers: {
@@ -268,13 +268,13 @@ const putCharacter = async (character: HnsCharacter) => fetch(HNS_API_URL + "Api
   },
   body: JSON.stringify( character ),
 });
-function createCallback_PutCharacter_UpdateStore(guard: object, set: (this: void, value: HnsCharacter) => void): (response: Response) => void {
+function createCallback_PutCharacter_UpdateStore(guard: object, set: (this: void, value: PlayerCharacter) => void): (response: Response) => void {
   const inner = guard = {}
   return (response) => {
     if (response.ok) {
       response.json().then( o => {
         if (guard === inner){
-          set( Object.assign( new HnsCharacter(), o ) )
+          set( Object.assign( new PlayerCharacter(), o ) )
         }
       });
     }
@@ -289,8 +289,8 @@ function createCallback_PutCharacter_UpdateStore(guard: object, set: (this: void
 
 const localCharKey = "HnsCharacter/local";
 
-function getLocalHnsCharacter(): Writable<HnsCharacter> {
-  const store = writable(new HnsCharacter());
+function getLocalHnsCharacter(): Writable<PlayerCharacter> {
+  const store = writable(new PlayerCharacter());
   const { subscribe, set, update } = store;
   let newSet = set
   let newUpd = update
@@ -300,7 +300,7 @@ function getLocalHnsCharacter(): Writable<HnsCharacter> {
     const raw = localStorage.getItem(localCharKey)
     if (raw !== null) {
       console.log( "Loading char " + raw )
-      set(HnsCharacter.FromJson(raw))
+      set(PlayerCharacter.FromJson(raw))
       // TODO: How would we update this old stored value? Ask Server to do it?
     }
     else {
@@ -325,17 +325,17 @@ function getLocalHnsCharacter(): Writable<HnsCharacter> {
   return { subscribe, set: newSet, update: newUpd };
 }
 
-export const localCharacter: Writable<HnsCharacter> = getLocalHnsCharacter();
+export const localCharacter: Writable<PlayerCharacter> = getLocalHnsCharacter();
 
 
 
-const hnsCharacters: {[id: string]: Writable<HnsCharacter>} = {}
+const hnsCharacters: {[id: string]: Writable<PlayerCharacter>} = {}
 
-export function getHnsCharacter(id: string): Writable<HnsCharacter> {
+export function getHnsCharacter(id: string): Writable<PlayerCharacter> {
   if (Object.hasOwn( hnsCharacters, id )) { return hnsCharacters[id]; }
 
 	let guard = {}
-  const store = writable(new HnsCharacter(id));
+  const store = writable(new PlayerCharacter(id));
   const { subscribe, set, update } = store;
 
   if (!validate(id)) {
@@ -346,7 +346,7 @@ export function getHnsCharacter(id: string): Writable<HnsCharacter> {
   // Try initial get from the server
   Promise.resolve(getCharacter(id)).then(createCallback_GetCharacter_SetStore(guard, set));
 
-  const charStore: Writable<HnsCharacter> = {
+  const charStore: Writable<PlayerCharacter> = {
     subscribe,
     set: (newChar) => {
       console.log( "Set char" );

@@ -1,7 +1,5 @@
 <script lang="ts">
     import { link } from "svelte-routing";
-
-    export let location: string = "";
 </script>
 
 <div class="page">

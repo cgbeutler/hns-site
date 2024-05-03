@@ -4,7 +4,7 @@
     import { Link, Route, Router, navigate } from 'svelte-routing';
     import { NIL, validate } from 'uuid';
     import type { Writable } from 'svelte/store';
-    import type { HnsCharacter } from '../../lib/HnsCharacter';
+    import type { PlayerCharacter } from '../../lib/PlayerCharacter';
     import type { GetPropsParams } from 'svelte-routing/types/Link';
     import BuildView from './build-view/BuildView.svelte';
     import PlayView from './play-view/PlayView.svelte';
@@ -12,7 +12,7 @@
     export let id: string = NIL;
     $: console.log( "id = '" + id + "'" )
 
-    let character: Writable<HnsCharacter>;
+    let character: Writable<PlayerCharacter>;
     $: character = id == "local" ? localCharacter : getHnsCharacter(id)
 
     onMount(async () => {
@@ -28,7 +28,7 @@
         }
     });
 
-    function getLinkProps(params: GetPropsParams) {
+    function getLinkProps( params: GetPropsParams ): Record<string, any> {
         let { location, href, isPartiallyCurrent, isCurrent } = params;
         if (isCurrent || isPartiallyCurrent) return { class: "active" };
         return { class: "" }
