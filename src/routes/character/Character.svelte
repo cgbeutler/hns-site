@@ -52,31 +52,25 @@
 </div>
 
 <style>
+
   #character-page {
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
-    justify-content: stretch;
+    justify-content: start;
     min-width: 100%;
     min-height: 100%;
+    width: 100%;
   }
+
   #character-page-content {
     display: flex;
     flex-direction: column;
+    width: auto;
     align-items: center;
-    flex-grow: 1;
+    flex: 1 1 auto;
+    overflow: scroll;
   }
 
   h2 { font-size: 18pt; margin-top: 6pt; margin-bottom: 2pt; }
-  h3 { font-size: 16pt; margin-top: 6pt; margin-bottom: 2pt; }
-  h4 { font-size: 14pt; margin-top: 6pt; margin-bottom: 2pt; }
-  p { font-size: 12pt; margin-top: 6pt; margin-bottom: 2pt; }
 
-  #name-label {
-    font-size: x-large;
-    text-align: center;
-    min-width: 10px;
-    border: 0px;
-    background-color: transparent;
-  }
 </style>

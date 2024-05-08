@@ -36,8 +36,9 @@ You can tell the book contains
 
   let cursor = 0;
   let grab = 4;
+  let done = false;
   let interval = setInterval(() => {
-    if (cursor >= picture.length) { clearInterval(interval); return; }
+    if (cursor >= picture.length) { done = true; clearInterval(interval); return; }
     pictureOut += picture.slice(cursor,Math.min(cursor+grab, picture.length));
     cursor += grab;
     if (cursor > 60 && cursor < 460) { grab = 10; }
@@ -53,7 +54,7 @@ You can tell the book contains
   <h1>The Kleptonomicon</h1>
 
   {#if !$account}
-    <pre style="height: 25lh;">{pictureOut}█</pre>
+    <pre style="height: 25lh;">{pictureOut}{done? "" : "█"}</pre>
     <div class="v-button-box">
       <div class="h-button-box">
         <a href="/login" class="button" use:link>Login</a><a href="/account" class="button" use:link>Create Account</a><br>

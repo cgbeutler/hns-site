@@ -61,15 +61,11 @@
 </div>
 
 <style>
-  #character-menu {
-    min-width: 50px;
-  }
-
   .contents {
     display: flex;
     position: sticky;
     top: 0;
-    float: top;
+    flex: 0 0 auto;
     flex-direction: column;
     justify-content: stretch;
     align-items: stretch;
@@ -88,6 +84,13 @@
     max-width: 50px;
     width: 50px;
   }
+
+
+  #character-menu {
+    min-width: 50px;
+  }
+
+
   .toggle-bg img {
     display: inline-block;
     width: 1.5em;
