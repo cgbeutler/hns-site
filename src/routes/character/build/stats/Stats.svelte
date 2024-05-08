@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import type { Writable } from "svelte/store";
-    import { StatEnum, StatGenMethodEnum, type PlayerCharacter } from "../../../lib/PlayerCharacter";
+    import { StatEnum, StatGenMethodEnum, type PlayerCharacter } from "../../../../lib/PlayerCharacter";
 
     let error: string|undefined = undefined;
     export let character: Writable<PlayerCharacter> | undefined;

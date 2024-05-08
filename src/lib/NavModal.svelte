@@ -1,21 +1,14 @@
 <script lang="ts">
     import { fly } from "svelte/transition";
-    import { closeModal } from 'svelte-modals'
     import NavMenu from "./NavMenu.svelte";
 
     export let isOpen = false;
 
-    let viewWidth = 0;
-    $: if (isOpen && viewWidth >= 1000) {
-        closeModal()
-    }
 </script>
-
-<svelte:window bind:innerWidth={viewWidth} />
 
 {#if isOpen}
     <!-- on:introstart and on:outroend are required to transition 1 at a time between modals -->
-    <div role="dialog" class="modal" transition:fly={{ x: -100 }} on:introstart on:outroend>
+    <div role="dialog" class="modal" transition:fly={{ duration: 100, x: 100 }} on:introstart on:outroend>
         <NavMenu />
     </div>
 {/if}

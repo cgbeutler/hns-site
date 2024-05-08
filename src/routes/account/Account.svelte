@@ -1,6 +1,7 @@
 <script lang="ts">
     import { get } from "svelte/store";
     import { account } from "../../lib/stores";
+    import { link } from "svelte-routing";
 
     let name = "";
     let updatingName = false;
@@ -67,79 +68,85 @@
 
 </script>
 
-<div class="page">
-    <h2>Account Information</h2>
-
+<div id="account-page">
     {#if $account == null}
-        <p>Not logged-in</p>
-        <br>
-        <h3>Create Account</h3>
-        <form class="grid-form" on:submit|preventDefault="{createAccount}" method="post">
-            <label for="name"> Account Name </label>
-            <input type="text" bind:value="{name}" />
-            <label for="email">Email</label>
-            <input type="text" bind:value="{email}" />
-            <label for="password">Password</label>
-            <input type="text" bind:value="{password}" />
-            <label for="password2">Confirm Password</label>
-            <input type="text" bind:value="{password2}" class:red-outline={password!==password2} />
+      <h1>Create An Account</h1>
+      <form class="grid-form" on:submit|preventDefault="{createAccount}" method="post">
+        <label for="name"> Account Name </label>
+        <input type="text" bind:value="{name}" />
+        <label for="email">Email</label>
+        <input type="text" bind:value="{email}" />
+        <label for="password">Password</label>
+        <input type="text" bind:value="{password}" />
+        <label for="password2">Confirm Password</label>
+        <input type="text" bind:value="{password2}" class:red-outline={password!==password2} />
 
-            <button class="grid-form-submit" type="submit">Create Account</button>
-            {#each createAccountErrors as error}
-                <label class="grid-form-error" for="errors">{error}</label>
-            {/each}
-        </form>
+        <a href="/login" class="button" use:link>Login...</a><button class="bright" type="submit">Create Account</button>
+        {#each createAccountErrors as error}
+          <label class="grid-form-error" for="errors">{error}</label>
+        {/each}
+      </form>
     {:else}
+      <h2>Account Information</h2>
     
-        <form class="grid-3-form" on:submit|preventDefault="{updateAccount}" method="post">
+      <form class="grid-3-form" on:submit|preventDefault="{updateAccount}" method="post">
 
-            <label for="name"> Account Name </label>
-            {#if updatingName}
-                <input name="name" type="text" bind:value="{name}" />
-                <button on:click|preventDefault={toggleNameChange}><img src="/img/x.svg" alt="Cancel"></button>
-            {:else}
-                <input name="name" type="text" bind:value="{$account.name}" disabled />
-                <button on:click|preventDefault={toggleNameChange}><img src="/img/pencil.svg" alt="Edit"></button>
-            {/if}
+        <label for="name"> Account Name </label>
+        {#if updatingName}
+          <input name="name" type="text" bind:value="{name}" />
+          <button on:click|preventDefault={toggleNameChange}><img src="/img/x.svg" alt="Cancel"></button>
+        {:else}
+          <input name="name" type="text" bind:value="{$account.name}" disabled />
+          <button on:click|preventDefault={toggleNameChange}><img src="/img/pencil.svg" alt="Edit"></button>
+        {/if}
 
-            <label for="email"> Email </label>
-            {#if updatingEmail}
-                <input name="email" type="text" bind:value="{email}" />
-                <button on:click|preventDefault={toggleEmailChange}><img src="/img/x.svg" alt="Cancel"></button>
-            {:else}
-                <input name="email" type="text" bind:value="{$account.email}" disabled />
-                <button on:click|preventDefault={toggleEmailChange}><img src="/img/pencil.svg" alt="Edit"></button>
-            {/if}
+        <label for="email"> Email </label>
+        {#if updatingEmail}
+          <input name="email" type="text" bind:value="{email}" />
+          <button on:click|preventDefault={toggleEmailChange}><img src="/img/x.svg" alt="Cancel"></button>
+        {:else}
+          <input name="email" type="text" bind:value="{$account.email}" disabled />
+          <button on:click|preventDefault={toggleEmailChange}><img src="/img/pencil.svg" alt="Edit"></button>
+        {/if}
 
-            <label for="password"> Password </label>
-            {#if updatingPassword}
-                <input name="password" type="password" bind:value="{password}" />
-                <div></div>
-                <label for="password"> Confirm Password </label>
-                <input name="password" type="password" bind:value="{password2}" />
-                <button on:click|preventDefault={togglePasswordChange}><img src="/img/x.svg" alt="Cancel"></button>
-            {:else}
-                <input name="password" style="text-align:center;" type="text" value="---" disabled />
-                <div></div>
-                <label for="password"> Confirm Password </label>
-                <input name="password" style="text-align:center;" type="text" value="---" disabled />
-                <button on:click|preventDefault={togglePasswordChange}><img src="/img/pencil.svg" alt="Edit"></button>
-            {/if}
+        <label for="password"> Password </label>
+        {#if updatingPassword}
+          <input name="password" type="password" bind:value="{password}" />
+          <div></div>
+          <label for="password"> Confirm Password </label>
+          <input name="password" type="password" bind:value="{password2}" />
+          <button on:click|preventDefault={togglePasswordChange}><img src="/img/x.svg" alt="Cancel"></button>
+        {:else}
+          <input name="password" style="text-align:center;" type="text" value="---" disabled />
+          <div></div>
+          <label for="password"> Confirm Password </label>
+          <input name="password" style="text-align:center;" type="text" value="---" disabled />
+          <button on:click|preventDefault={togglePasswordChange}><img src="/img/pencil.svg" alt="Edit"></button>
+        {/if}
 
-            <div style="grid-column: span 3; height: 20px"></div>
+        <div style="grid-column: span 3; height: 20px"></div>
 
-            <label for="currentPassword"> Current Password </label>
-            <input name="currentPassword" type="password" bind:value="{currentPassword}" disabled='{!updatingSomething}' />
+        <label for="currentPassword"> Current Password </label>
+        <input name="currentPassword" type="password" bind:value="{currentPassword}" disabled='{!updatingSomething}' />
 
-            <button class="grid-form-submit" type="submit" disabled='{!updatingSomething}'>Apply Changes</button>
-            {#each updateErrors as error}
-                <label class="grid-form-error" for="errors">{error}</label>
-            {/each}
-        </form>
+        <button class="grid-form-submit" type="submit" disabled='{!updatingSomething}'>Apply Changes</button>
+        {#each updateErrors as error}
+          <label class="grid-form-error" for="errors">{error}</label>
+        {/each}
+      </form>
     {/if}
 </div>
 
 <style>
+  #account-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+
   .grid-form {
     display: grid;
     max-width: 500px;

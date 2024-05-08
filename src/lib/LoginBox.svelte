@@ -1,12 +1,7 @@
 <script lang="ts">
-  import { get } from 'svelte/store';
-  import { Link, navigate } from 'svelte-routing';
+  import { navigate } from 'svelte-routing';
   import { account } from "./stores";
-  import { append } from 'svelte/internal';
   
-  let currAccount = $account;
-  let name = "No Username";
-
   let nameOrEmail = "";
   let password = "";
   let loginErrors: string[] = [];

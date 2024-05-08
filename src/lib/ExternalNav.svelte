@@ -1,22 +1,17 @@
 
 <!-- External links at the bottom -->
 <div class="ext-nav">
-    <span style="margin: 0pt 10pt"> Report a problem:</span>
-    <a href="https://github.com/cgbeutler/hns-site">
-      <img src="/img/github_logo.png" alt="github.com/cgbeutler/hns-site">
-    </a>
-    <br>
-    <span style="margin: 0pt 10pt"> Find other projects on:</span>
-    <a href="https://aristonaut.itch.io/">
-      <img src="/img/itchio_logo.svg" alt="aristonaut.itch.io">
-    </a>
+  &#169; 2024 <a href="http://corybeutler.com">Cory Beutler</a><br>
+  <span style="margin: 0pt 10pt"> Report a problem:</span>
+  <a href="https://github.com/cgbeutler/hns-site">
+    <img src="/img/github_logo.png" alt="github.com/cgbeutler/hns-site">
+  </a>
 </div>
 
 <style>
     .ext-nav {
       background-color: #000000cc;
       color: whitesmoke;
-      margin: 20pt auto;
       padding: 10pt;
       border-radius: 5pt;
       border: 2pt solid #111111;

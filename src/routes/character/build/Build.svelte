@@ -4,19 +4,13 @@
     import type { PlayerCharacter } from '../../../lib/PlayerCharacter';
     import { Link, Route, Router } from 'svelte-routing';
     import type { GetPropsParams } from 'svelte-routing/types/Link';
-    import BackgroundBuilder from './BackgroundBuilder.svelte';
-    import StatBuilder from './StatBuilder.svelte';
+    import Summary from './Summary.svelte';
+    import Stats from './stats/Stats.svelte';
 
     export let id: string;
     export let character: Writable<PlayerCharacter>;
     let error: string | undefined;
-
     onMount(async () => { error = !!character || $character == null ? undefined : `Failed to load character`; });
-
-    function getLinkProps(params: GetPropsParams) {
-        if (params.isCurrent) return { class: "active" };
-        return { class: "" }
-    }
 </script>
 
 {#if error}
@@ -29,19 +23,12 @@
         <h2>Loading...</h2>
     </div>
 {:else}
-
-    <div class="sheet-block" style="text-align:center;">
-        <h4>Build Steps:</h4>
-        <div class="toggle-bg">
-            <Link to="/character/{id}/build/stats" getProps={getLinkProps}>1. Stats</Link>
-            <Link to="/character/{id}/build/archetypes" getProps={getLinkProps}>2. Archetype</Link>
-            <Link to="/character/{id}/build/background" getProps={getLinkProps}>3. Background</Link>
-        </div>
+    <div class="sheet-block" style="display: flex; flex-direction: row; flex-wrap: nowrap; flex-grow: 1;">
+        <h1> Character Builder </h1>
     </div>
-    
     <Router>
-        <Route path="/background"> <BackgroundBuilder bind:character={character}/> </Route>
-        <Route path="/stats"> <StatBuilder bind:character={character}/> </Route>
+        <Route path="/"> <Summary bind:id={id} bind:character={character}/> </Route>
+        <Route path="/stats"> <Stats bind:character={character}/> </Route>
     </Router>
 {/if}
 

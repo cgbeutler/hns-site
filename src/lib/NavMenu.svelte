@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { get } from 'svelte/store';
   import { Link } from 'svelte-routing';
   import { account, hnsCharacterSummaries } from "./stores";
   import LoginBox from './LoginBox.svelte';
   import type { GetPropsParams } from 'svelte-routing/types/Link';
+    import { closeAllModals, closeModal } from 'svelte-modals';
     
   function getMainLinkProps(params: GetPropsParams) {
     if (params.isPartiallyCurrent) return { class: "curr-path" };
@@ -35,15 +35,15 @@
     <a href="/" id="home-button"><img src="/img/HnsBig.svg" alt="H&S"></a>
     <h4 class="title">Hammer & Steel</h4>
 
-    <Link to="/srd" getProps={getMainLinkProps}>Rulebook</Link>
-    <Link to="/dice" getProps={getMainLinkProps}>Dice Roller</Link>
-    <Link to="/dice/ageroller" getProps={getSubLinkProps}>AGE Roller</Link>
-    <Link to="/dice/eyeroller" getProps={getSubLinkProps}>Eye Roller</Link>
+    <Link to="/srd" getProps={getMainLinkProps} on:click={closeAllModals}>Rulebook</Link>
+    <Link to="/dice" getProps={getMainLinkProps} on:click={closeAllModals}>Dice Roller</Link>
+    <Link to="/dice/ageroller" getProps={getSubLinkProps} on:click={closeAllModals}>AGE Roller</Link>
+    <Link to="/dice/eyeroller" getProps={getSubLinkProps} on:click={closeAllModals}>Eye Roller</Link>
     <span style="text-align: center;">---</span>
-    <Link to="/account" getProps={getMainLinkProps}>My Account</Link>
-    <Link to="/character" getProps={getMainLinkProps}>Characters</Link>
+    <Link to="/account" getProps={getMainLinkProps} on:click={closeAllModals}>My Account</Link>
+    <Link to="/character" getProps={getMainLinkProps} on:click={closeAllModals}>Characters</Link>
     {#each Object.entries(charList) as [id, character]}
-      <Link to={"/character/"+id} getProps={getSubLinkProps}>{character.name}</Link>
+      <Link to={"/character/"+id} getProps={getSubLinkProps} on:click={closeAllModals}>{character.name}</Link>
     {/each}
   </nav>
   <LoginBox />
@@ -51,10 +51,10 @@
 
 <style>
   .contents {
-    display: flex; 
+    display: flex;
     position: sticky;
     top: 0;
-    float: left;
+    float: right;
     flex-direction: column;
     justify-content: stretch;
     align-items: stretch;
@@ -65,9 +65,9 @@
     max-height: 100vh;
     min-width: 200px;
     max-width: 90vw;
-    margin-right: 20px;
+    margin-left: auto;
     padding: 0px;
-    border-right: 2px solid;
+    border-left: 2px solid;
     border-color: rgb(44, 44, 44);
   }
 

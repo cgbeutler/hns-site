@@ -14,6 +14,7 @@
   import Home from "./routes/Home.svelte";
   import NotFound from './routes/NotFound.svelte';
   import Srd from './routes/srd/Srd.svelte';
+    import Login from './routes/login/Login.svelte';
 
   let viewWidth = 0;
 
@@ -34,11 +35,7 @@
     <div slot="backdrop" class="backdrop" transition:fade on:click={closeModal} on:keypress={onKeyPress} role="none" />
   </Modals>
 
-  {#if viewWidth >= 1000}
-    <NavMenu />
-  {:else}
-    <button id="nav-button" on:click={()=>openModal(NavModal)}><img src="/img/HnsSmall.svg" alt="H&S"></button>
-  {/if}
+  <button id="nav-button" on:click={()=>openModal(NavModal)}><img src="/img/HnsSmall.svg" alt="H&S"></button>
     
   <Route component={NotFound} />
   <Route path="/" component={Home} />
@@ -49,9 +46,22 @@
   <Route path="/dice/eyeroller" component={EyeRoller} />
   <Route path="/srd" component={Srd} />
   <Route path="/account" component={Account} />
+  <Route path="/login" component={Login} />
 </Router>
 
 <style>
+  #nav-button {
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 50px;
+    height: 50px;
+    background-color: transparent;
+    margin: 5px;
+    padding: 0px;
+  }
+
   .backdrop {
     position: fixed;
     z-index: 9;

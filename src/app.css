@@ -1,6 +1,7 @@
 :root {
   color-scheme: dark;
   color: #FDF6E3;
+  --main-color: #FDF6E3;
   background-color: black;
   background-position: center;
   background-attachment: fixed;
@@ -14,19 +15,31 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+
+  min-width: 100%;
+  width: 100%;
+  min-height: 100%;
+  height: 100%
+}
+
+html {
+  min-width: 100%;
+  width: 100%;
+  min-height: 100%;
+  height: 100%
 }
 
 body {
   display: flex;
   place-items: top;
-  min-width: 320px;
-  min-height: 100vh;
+  min-width: 100%;
+  min-height: 100%;
   margin: 0;
 }
 
 #app {
-  width: 100%;
-  height: 100%;
+  min-width: 100%;
+  min-height: 100%;
   margin: 0px;
   padding: 0px;
   background-color: rgb(20,20,25);
@@ -82,17 +95,6 @@ h3 { font-size: 16pt; }
 h4 { font-size: 14pt; }
 p { font-size: 12pt; margin-top: 6pt; margin-bottom: 2pt; }
 
-
-
-#nav-button {
-  display: block;
-  float: left;
-  width: 50px;
-  height: 50px;
-  background-color: transparent;
-  margin: 5px;
-  padding: 0px;
-}
 
 .banded-menu {
   display: flex;
@@ -193,6 +195,7 @@ button,
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
+  text-align: center;
   background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
@@ -206,6 +209,10 @@ button:focus-visible,
 .button:focus,
 .button:focus-visible {
   outline: 4px auto #535353;
+}
+
+.button:visited {
+  color: var(--main-color);
 }
 
 button.bright,
@@ -288,6 +295,72 @@ button.bright-red,
 }
 .toggle-bg a.active:visited {
   color: #eeeeee;
+}
+
+
+.toggle-bg-v {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  justify-self: center;
+  align-self: center;
+  background-color: #111111;
+  padding: 2px 3px;
+  margin: 3px;
+  border-top: 2px solid #101010;
+  border-bottom: 2px solid #1a1a1a;
+  border-radius: 12px;
+  gap: 4px;
+}
+.toggle-bg-v a,
+.toggle-bg-v button {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 0;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: start;
+  background-color: #303030;
+  color: #dddddd;
+  margin: 3px;
+  padding: 2px 10px 2px 4px;
+  border-radius: 10px;
+  border-top: 2px solid #3f3f3f;
+  border-bottom: 2px solid #2a2a2a;
+}
+.toggle-bg-v a.active,
+.toggle-bg-v button.active {
+  background-color: #525252;
+  color: #eeeeee;
+  margin: 0px;
+  padding: 5px 12px 5px 7px;
+  border-top-color: #656565;
+  border-bottom-color: #383838;
+}
+.toggle-bg-v a:visited {
+  color: #dddddd;
+}
+.toggle-bg-v a.active:visited {
+  color: #eeeeee;
+}
+.toggle-bg-v a > img,
+.toggle-bg-v button > img {
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
+}
+.toggle-bg-v.slim a,
+.toggle-bg-v.slim button {
+  justify-content: center;
+  padding: 2px;
+  overflow: hidden;
+}
+.toggle-bg-v.slim a.active,
+.toggle-bg-v.slim button.active {
+  justify-content: center;
+  padding: 5px;
+  overflow: hidden;
 }
 
 
