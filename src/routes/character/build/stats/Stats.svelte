@@ -28,7 +28,7 @@
     socialPointSum = 3 + ($character.statGen_Roll[StatEnum.Candor]??-1) + ($character.statGen_Roll[StatEnum.Conscious]??-1) + ($character.statGen_Roll[StatEnum.Cunning]??-1);
   }
   let socialImprovementSum = 0;
-  $: socialImprovementSum = ($character.statImprovements.Candor??0) - ($character.statImprovements.Conscious??0) - ($character.statImprovements.Cunning??0);
+  $: socialImprovementSum = ($character.statImprovements.Candor??0) + ($character.statImprovements.Conscious??0) + ($character.statImprovements.Cunning??0);
 
   let rawExplorationRolls: Array<number> | undefined;
   let rawExplorationRollsString: string = "";
@@ -51,7 +51,7 @@
     explorationPointSum = 3 + ($character.statGen_Roll[StatEnum.Might]??-1) + ($character.statGen_Roll[StatEnum.Artifice]??-1) + ($character.statGen_Roll[StatEnum.Tuning]??-1);
   }
   let explorationImprovementSum = 0;
-  $: explorationImprovementSum = ($character.statImprovements.Might??0) - ($character.statImprovements.Artifice??0) - ($character.statImprovements.Tuning??0);
+  $: explorationImprovementSum = ($character.statImprovements.Might??0) + ($character.statImprovements.Artifice??0) + ($character.statImprovements.Tuning??0);
 
     
 </script>
@@ -106,7 +106,7 @@
       {:else}
         <td></td>
       {/if}
-      <th> <span class:red={baseStatPoints - $character.StatPoints != socialImprovementSum}>{baseStatPoints - $character.StatPoints - socialImprovementSum}</span>/{baseStatPoints - $character.StatPoints} </th>
+      <th> <span class:red={$character.StatPoints - baseStatPoints != socialImprovementSum}>{$character.StatPoints - baseStatPoints - socialImprovementSum}</span>/{$character.StatPoints - baseStatPoints} </th>
       <td></td>
     </tr>
   </table>
@@ -174,7 +174,7 @@
       {:else}
         <td></td>
       {/if}
-      <th> <span class:red={baseStatPoints - $character.StatPoints != explorationImprovementSum}>{baseStatPoints - $character.StatPoints - explorationImprovementSum}</span>/{baseStatPoints - $character.StatPoints} </th>
+      <th> <span class:red={$character.StatPoints - baseStatPoints != explorationImprovementSum}>{$character.StatPoints - baseStatPoints - explorationImprovementSum}</span>/{$character.StatPoints - baseStatPoints} </th>
       <td></td>
     </tr>
   </table>
