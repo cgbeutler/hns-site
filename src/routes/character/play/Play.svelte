@@ -1,11 +1,11 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import type { Writable } from 'svelte/store';
-  import type { PlayerCharacter } from '../../../lib/PlayerCharacter';
-    import { Route, Router } from 'svelte-routing';
-    import Social from './social/Social.svelte';
-    import Exploration from './exploration/Exploration.svelte';
-    import Summary from './Summary.svelte';
+  import type { PlayerCharacter } from '../../../lib/Character/PlayerCharacter';
+  import { Route, Router } from 'svelte-routing';
+  import Social from './social/Social.svelte';
+  import Exploration from './exploration/Exploration.svelte';
+  import Summary from './Summary.svelte';
 
   export let id: string;
   export let character: Writable<PlayerCharacter>;
@@ -33,8 +33,8 @@
 
   <Router>
     <Route path="/"> <Summary bind:id={id} bind:character={character}/> </Route>
-    <Route path="/social"> <Social bind:id={id} bind:character={character}/> </Route>
-    <Route path="/exploration"> <Exploration bind:id={id} bind:character={character}/> </Route>
+    <Route path="/social"> <Social bind:character={character}/> </Route>
+    <Route path="/exploration"> <Exploration bind:character={character}/> </Route>
   </Router>
 {/if}
 

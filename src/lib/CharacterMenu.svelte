@@ -1,28 +1,19 @@
 <script lang="ts">
   import { Link, Route, Router } from 'svelte-routing';
-  import type { GetPropsParams } from 'svelte-routing/types/Link';
+  import type { GetPropsParams } from './Helpers/SvelteRoutingTypes';
   import { NIL } from 'uuid';
-  import type { PlayerCharacter } from './PlayerCharacter';
-  import type { Writable } from 'svelte/store';
-  import { getHnsCharacter, localCharacter } from './stores';
   
   export let id: string = NIL;
   $: console.log( "id = '" + id + "'" )
 
-  let character: Writable<PlayerCharacter>;
-  $: character = id == "local" ? localCharacter : getHnsCharacter(id)
-  
   let expanded = false;
 
-  function getLinkProps( params: GetPropsParams ): Record<string, any> {
-    let { location, href, isPartiallyCurrent, isCurrent } = params;
-    if (isCurrent || isPartiallyCurrent) return { class: "active" };
+  function getLinkProps( p: GetPropsParams ): Record<string, any> {
+    if (p.isCurrent || p.isPartiallyCurrent) return { class: "active" };
     return { class: "" }
   }
-  function getSubLinkProps( params: GetPropsParams ): Record<string, any> {
-    let { location, href, isPartiallyCurrent, isCurrent } = params;
-    if (isCurrent) return { class: "active" };
-    return { class: "" }
+  function getSubLinkProps( p: GetPropsParams ): Record<string, any> {
+    return p.isCurrent ? { class: "active" } : { class: "" };
   }
 
 </script>
@@ -30,28 +21,28 @@
 <div class="contents" class:slim={!expanded}>
   <nav id="character-menu">
     <div class="toggle-bg-v slim" style="margin-bottom:12px;">
-      <button on:click={() => expanded = !expanded}>{expanded ? "<" : ">"}</button>
+      <button on:click={() => expanded = !expanded}><img class="expand-icon" class:rotated={expanded} src="/img/icons/ExpandRightIcon.svg" alt={expanded?"Collapse":"Expand"}/></button>
     </div>
 
     <div class="toggle-bg-v" class:slim={!expanded} style="margin-bottom:12px;">
-      <Link to="/character/{id}/build" getProps={getLinkProps}><img src="/img/icons/HammerIcon.svg"/>{#if expanded}&nbsp;Build{/if}</Link>
-      <Link to="/character/{id}/play" getProps={getLinkProps}><img src="/img/icons/SwordIcon30.svg"/>{#if expanded}&nbsp;Play{/if}</Link>
+      <Link to="/character/{id}/build" getProps={getLinkProps}><img src="/img/icons/HammerIcon.svg" alt={expanded?"":"Build"}/>{#if expanded}&nbsp;Build{/if}</Link>
+      <Link to="/character/{id}/play" getProps={getLinkProps}><img src="/img/icons/SwordIcon30.svg" alt={expanded?"":"Play"}/>{#if expanded}&nbsp;Play{/if}</Link>
     </div>
     
     <Router>
       <Route path="/build/*">
         <div class="toggle-bg-v" class:slim={!expanded}>
-          <Link to="/character/{id}/build" getProps={getSubLinkProps}>Summary</Link>
-          <Link to="/character/{id}/build/stats" getProps={getSubLinkProps}>Stats</Link>
-          <Link to="/character/{id}/build/archetype" getProps={getSubLinkProps}>Archetype</Link>
-          <Link to="/character/{id}/build/background" getProps={getSubLinkProps}>Background</Link>
+          <Link to="/character/{id}/build" getProps={getSubLinkProps}><img src="/img/icons/PersonaIcon.svg" alt={expanded?"":"Persona"}/>{#if expanded}&nbsp;Persona{/if}</Link>
+          <Link to="/character/{id}/build/stats" getProps={getSubLinkProps}><img src="/img/icons/PlusPlusIcon.svg" alt={expanded?"":"Stats & Skills"}/>{#if expanded}&nbsp;Stats & Skills{/if}</Link>
+          <Link to="/character/{id}/build/feats" getProps={getSubLinkProps}><img src="/img/icons/StarIcon.svg" alt={expanded?"":"Feats"}/>{#if expanded}&nbsp;Feats{/if}</Link>
+          <Link to="/character/{id}/build/abilities" getProps={getSubLinkProps}><img src="/img/icons/AbilitiesIcon.svg" alt={expanded?"":"Abilities"}/>{#if expanded}&nbsp;Abilities{/if}</Link>
         </div>
       </Route>
       <Route path="/play/*">
         <div class="toggle-bg-v" class:slim={!expanded}>
-          <Link to="/character/{id}/play" getProps={getSubLinkProps}><img src="/img/icons/HeartIcon.svg"/>{#if expanded}&nbsp;Status{/if}</Link>
-          <Link to="/character/{id}/play/social" getProps={getSubLinkProps}><img src="/img/icons/SocialIcon.svg"/>{#if expanded}&nbsp;Social{/if}</Link>
-          <Link to="/character/{id}/play/exploration" getProps={getSubLinkProps}><img src="/img/icons/MapIcon.svg"/>{#if expanded}&nbsp;Exploration{/if}</Link>
+          <Link to="/character/{id}/play" getProps={getSubLinkProps}><img src="/img/icons/HeartIcon.svg" alt={expanded?"":"Status"}/>{#if expanded}&nbsp;Status{/if}</Link>
+          <Link to="/character/{id}/play/social" getProps={getSubLinkProps}><img src="/img/icons/SocialIcon.svg" alt={expanded?"":"Social"}/>{#if expanded}&nbsp;Social{/if}</Link>
+          <Link to="/character/{id}/play/exploration" getProps={getSubLinkProps}><img src="/img/icons/MapIcon.svg" alt={expanded?"":"Exploration"}/>{#if expanded}&nbsp;Exploration{/if}</Link>
           <Link to="/character/{id}/play/skills" getProps={getSubLinkProps}>Actions</Link>
           <Link to="/character/{id}/play/inventory" getProps={getSubLinkProps}>Inventory</Link>
         </div>
@@ -90,17 +81,11 @@
     min-width: 50px;
   }
 
-
-  .toggle-bg img {
-    display: inline-block;
-    width: 1.5em;
-    height: 1.5em;
+  .expand-icon {
+    transition: all 0.1s ease;
   }
-
-  .title {
-    text-align: center;
-    margin: -15px 0px 10px 0px;
-    padding: 0;
+  .expand-icon.rotated {
+    transform: rotate(180deg);
   }
 
 </style>

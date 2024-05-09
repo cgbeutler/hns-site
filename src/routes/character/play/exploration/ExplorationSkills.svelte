@@ -1,67 +1,48 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import type { Writable } from 'svelte/store';
-  import { SocialStats, type PlayerCharacter } from '../PlayerCharacter';
+  import type { PlayerCharacter } from '../../../../lib/Character/PlayerCharacter';
+  import { MajorExplorationSkills, MinorExplorationSkills, ExplorationStats } from '../../../../lib/Character/CharacterEnums';
 
-  let error: string|undefined = undefined;
   export let character: Writable<PlayerCharacter>;
-  onMount(async () => {
-    if (!character) { 
-      error = `Failed to load character`
-      return;
-    }
-  });
-  
   function formatMod( mod: number ): string {
     if (mod < -1) return "--";
     return (mod < 0 ? "" : "+") + mod;
   }
 </script>
 
-{#if error}
-  <div class="sheet-block">
-    <h2>Cannot Load Social Stats</h2>
-    <p>Error: {error}</p>
-  </div>
-{:else if !character || $character == null}
-  <div class="sheet-block">
-    <h2>Loading...</h2>
-  </div>
-{:else}
-  <div class="skill-grid">
-    <h4>Social Stats</h4>
-    {#each SocialStats as stat }
-      <div class="skill-cell">
-        <button class="passive-button">{formatMod($character.GetStat(stat))}</button>
-        <p style="text-align: center;"><b>{stat}</b></p>
+<div class="skill-grid">
+  <h4>Exploration Stats</h4>
+  {#each ExplorationStats as stat }
+    <div class="skill-cell">
+      <button class="passive-button">{formatMod($character.GetStat(stat))}</button>
+      <p style="text-align: center;"><b>{stat}</b></p>
+    </div>
+  {/each}
+  <h4>Exploration Skills</h4>
+  {#each MajorExplorationSkills as skill }
+    <div class="skill-cell">
+      <div class="skill-cell-row">
+        <label class="inspiration-check" class:checked={$character.explorationSkills[skill].inspiration}>
+          <input type="checkbox" bind:checked={$character.explorationSkills[skill].inspiration}>
+        </label>
+        <button class="skill-button">{formatMod($character.GetSkill(skill))}</button>
       </div>
-    {/each}
-    <h4>Social Skills</h4>
-    {#each Object.keys($character.socialSkills).slice(0,3) as skill }
-      <div class="skill-cell">
-        <div class="skill-cell-row">
-          <label class="inspiration-check" class:checked={$character.socialSkills[skill].inspiration}>
-            <input type="checkbox" bind:checked={$character.socialSkills[skill].inspiration}>
-          </label>
-          <button class="skill-button">{formatMod($character.GetSocialSkill(skill))}</button>
-        </div>
-        <p>{skill}{"+".repeat($character.socialSkills[skill].points)}</p>
+      <p>{skill}{"+".repeat($character.explorationSkills[skill].points)}</p>
+    </div>
+  {/each}
+  <div class="grid-divider"/>
+  {#each MinorExplorationSkills as skill }
+    <div class="skill-cell">
+      <div class="skill-cell-row">
+        <label class="inspiration-check" class:checked={$character.explorationSkills[skill].inspiration}>
+          <input type="checkbox" bind:checked={$character.explorationSkills[skill].inspiration}>
+        </label>
+        <button class="skill-button">{formatMod($character.GetSkill(skill))}</button>
       </div>
-    {/each}
-    <div class="grid-divider"/>
-    {#each Object.keys($character.socialSkills).slice(3) as skill }
-      <div class="skill-cell">
-        <div class="skill-cell-row">
-          <label class="inspiration-check" class:checked={$character.socialSkills[skill].inspiration}>
-            <input type="checkbox" bind:checked={$character.socialSkills[skill].inspiration}>
-          </label>
-          <button class="skill-button">{formatMod($character.GetSocialSkill(skill))}</button>
-        </div>
-        <p>{skill}{"+".repeat($character.socialSkills[skill].points)}</p>
-      </div>
-    {/each}
-  </div>
-{/if}
+      <p>{skill}{"+".repeat($character.explorationSkills[skill].points)}</p>
+    </div>
+  {/each}
+</div>
 
 <style>
 .skill-grid {
@@ -169,16 +150,16 @@
 
 /* On mouse-over, add a grey background color */
 .inspiration-check:hover {
-  background-color: #8b8b8b;
+  background-image: url("/img/icons/inspiration_hover.svg");
 }
 /* When the checkbox is checked, add a blue background */
 .inspiration-check.checked {
   background-image: url("/img/icons/inspiration_filled.svg");
 }
-
-
-
-
+/* On mouse-over, add a grey background color */
+.inspiration-check.checked:hover {
+  background-image: url("/img/icons/inspiration_hover.svg");
+}
 
 
 .skill-button {

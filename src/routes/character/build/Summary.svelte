@@ -1,18 +1,9 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { derived, type Writable } from "svelte/store";
-  import type { PlayerCharacter } from "../../../lib/PlayerCharacter";
-  import Link from "../../../lib/Link.svelte";
+  import type { Writable } from "svelte/store";
+  import type { PlayerCharacter } from "../../../lib/Character/PlayerCharacter";
 
   export let id: string;
   export let character: Writable<PlayerCharacter>;
-  let error: string | undefined;
-  onMount(async () => { error = !!character || $character == null ? undefined : `Failed to load character`; });
-  
-  function getLinkProps(params: GetPropsParams) {
-    if (params.isCurrent) return { class: "active" };
-    return { class: "" }
-  }
 
   //inclusive
   function clamp( n: number, min: number, max: number ) {
@@ -93,137 +84,128 @@
 
 </script>
 
-{#if error}
-  <div class="sheet-block">
-    <h2>Cannot Load Social Stats</h2>
-    <p>Error: {error}</p>
+<img src="/img/icons/PersonaIcon.svg" alt="" height="50px"/>
+<h1> Persona Builder </h1>
+<div class="sheet-block-h">
+  <div class="sheet-block-v">
+    <h2>Character</h2>
+    <label for="character-name"> <h4 style="display:inline-block">Character Name:</h4> </label>
+    <input id="character-name" placeholder="Unnamed Character" bind:value={$character.name}>
+    <label for="character-description"> <h4 style="display:inline-block">Character Description:</h4> </label>
+    <textarea id="character-description" style="flex-grow: 1" placeholder="" bind:value={$character.description} />
   </div>
-{:else if !character || $character == null}
-  <div class="sheet-block">
-    <h2>Loading...</h2>
+  <div class="sheet-block-v">
+    <h2>Background</h2>
+    Constitution, Class, and Lineage<br>selection here?
   </div>
-{:else}
-  <div class="sheet-block-h">
-    <div class="sheet-block-v">
-      <h2>Character</h2>
-      <label for="character-name"> <h4 style="display:inline-block">Character Name:</h4> </label>
-      <input id="character-name" placeholder="Unnamed Character" bind:value={$character.name}>
-      <label for="character-description"> <h4 style="display:inline-block">Character Description:</h4> </label>
-      <textarea id="character-description" style="flex-grow: 1" placeholder="" bind:value={$character.description} />
-    </div>
-    <div class="sheet-block-v">
-      <h2>Background</h2>
-      Constitution, Class, and Lineage<br>selection here?
-    </div>
-  </div>
-  
-  <h2>Experience</h2>
-  <div class="sheet-block-h" style="flex: 0 0 auto; justify-content:center; gap: 5px">
-    <button on:click={removeExp}>-</button>
-    <p style="font-family: 'Courier New', Courier, monospace; text-align: center;">
-      <input class="number-input-small" type="text" min=0 bind:value={experienceRaw} on:change={()=>updateExp(0)}/><br>
-      {#each {length: experienceRaw%10} as _,i }█{/each}{#each {length: 9-(experienceRaw%10)} as _,i }░{/each}
-    </p>
-    <button on:click={addExp}>+</button>
-  </div>
-  <button disabled={experienceRaw < 10 || $character.level >= 20} style="flex-basis:25%" on:click={levelUp}>{$character.level >= 20 ? "Max Level" : "Level Up"}</button>
+</div>
 
-  <h2>Level Tracker</h2>
-  <div id="level-tracker">
-    <label class="tracker-cell-label label-h">
-      <h4>Level</h4>
-      <input class="number-input-small" class:invalid-input={levelInputInvalid} type="number" min=1 max=20 bind:this={levelInput} on:change={levelInputChanged}/>
-    </label>
-    
-    {#each {length: 20} as _,i }
-      <div class="tracker-cell-level" class:level-reached={(i+1)<=$character.level}>{i+1}</div>
-    {/each}
-    <div class="tracker-cell-total">Total</div>
-    
-    {#each Object.entries($character.levelTrackerPerks) as [reward, levelArray]}
-      <div class="tracker-cell-label">{reward}</div>
-      {#each levelArray as n, i }
-        <div class="tracker-cell-reward" class:level-reached={(i+1)<=$character.level}>{n > 0 ? n : ""}</div>
-      {/each}
-      <div class="tracker-cell-total">{$character.lookup(reward)}</div>
-    {/each}
-  </div>
+<h2>Experience</h2>
+<div class="sheet-block-h" style="flex: 0 0 auto; justify-content:center; gap: 5px">
+  <button on:click={removeExp}>-</button>
+  <p style="font-family: 'Courier New', Courier, monospace; text-align: center;">
+    <input class="number-input-small" type="text" min=0 bind:value={experienceRaw} on:change={()=>updateExp(0)}/><br>
+    {#each {length: experienceRaw%10} as _,i }█{/each}{#each {length: 9-(experienceRaw%10)} as _,i }░{/each}
+  </p>
+  <button on:click={addExp}>+</button>
+</div>
+<button disabled={experienceRaw < 10 || $character.level >= 20} style="flex-basis:25%" on:click={levelUp}>{$character.level >= 20 ? "Max Level" : "Level Up"}</button>
 
-  <h2>Archetypes</h2>
-  <label class="label-h" style="justify-content: center;">
-    Archetype Levels To Assign
-    <input class="number-input-small" class:invalid-input={archetypeLevelsLeft < 0} value={archetypeLevelsLeft} disabled>
+<h2>Level Tracker</h2>
+<div id="level-tracker">
+  <label class="tracker-cell-label label-h">
+    <h4>Level</h4>
+    <input class="number-input-small" class:invalid-input={levelInputInvalid} type="number" min=1 max=20 bind:this={levelInput} on:change={levelInputChanged}/>
   </label>
+  
+  {#each {length: 20} as _,i }
+    <div class="tracker-cell-level" class:level-reached={(i+1)<=$character.level}>{i+1}</div>
+  {/each}
+  <div class="tracker-cell-total">Total</div>
+  
+  {#each Object.entries($character.levelTrackerPerks) as [reward, levelArray]}
+    <div class="tracker-cell-label">{reward}</div>
+    {#each levelArray as n, i }
+      <div class="tracker-cell-reward" class:level-reached={(i+1)<=$character.level}>{n > 0 ? n : ""}</div>
+    {/each}
+    <div class="tracker-cell-total">{$character.lookup(reward)}</div>
+  {/each}
+</div>
 
-  <h2>Warrior Tracker</h2>
-  <div id="arch-level-tracker">
-    <label class="tracker-cell-label label-h">
-      <h4>Level</h4>
-      <input class="number-input-small" class:invalid-input={warriorInputInvalid} type="number" min=0 max=15 bind:this={warriorInput} on:change={warriorInputChanged}/>
-    </label>
-    
-    {#each {length: 16} as _,i }
-      <div class="tracker-cell-level" class:level-reached={i<=$character.warriorLevel}>{i}</div>
-    {/each}
-    <div class="tracker-cell-total">Total</div>
-    
-    {#each Object.entries($character.warriorTrackerPerks) as [reward, arr]}
-      <div class="tracker-cell-label">{reward}</div>
-      {#each arr as n, i }
-        <div class="tracker-cell-reward" class:level-reached={i<=$character.warriorLevel}>{
-          i == 0 ? ($character.lookup("Starting" + reward)??0) + n : n > 0 ? n : ""
-        }</div>
-      {/each}
-      <div class="tracker-cell-total">{$character.lookup(reward)}</div>
-    {/each}
-  </div>
+<h2>Archetypes</h2>
+<label class="label-h" style="justify-content: center;">
+  Archetype Levels To Assign
+  <input class="number-input-small" class:invalid-input={archetypeLevelsLeft < 0} value={archetypeLevelsLeft} disabled>
+</label>
 
-  <h2>Specialist Tracker</h2>
-  <div id="arch-level-tracker">
-    <label class="tracker-cell-label label-h">
-      <h4>Level</h4>
-      <input class="number-input-small" class:invalid-input={specialistInputInvalid} type="number" min=0 max=15 bind:this={specialistInput} on:change={specialistInputChanged}/>
-    </label>
-    
-    {#each {length: 16} as _,i }
-      <div class="tracker-cell-level" class:level-reached={i<=$character.specialistLevel}>{i}</div>
+<h2>Warrior Tracker</h2>
+<div id="arch-level-tracker">
+  <label class="tracker-cell-label label-h">
+    <h4>Level</h4>
+    <input class="number-input-small" class:invalid-input={warriorInputInvalid} type="number" min=0 max=15 bind:this={warriorInput} on:change={warriorInputChanged}/>
+  </label>
+  
+  {#each {length: 16} as _,i }
+    <div class="tracker-cell-level" class:level-reached={i<=$character.warriorLevel}>{i}</div>
+  {/each}
+  <div class="tracker-cell-total">Total</div>
+  
+  {#each Object.entries($character.warriorTrackerPerks) as [reward, arr]}
+    <div class="tracker-cell-label">{reward}</div>
+    {#each arr as n, i }
+      <div class="tracker-cell-reward" class:level-reached={i<=$character.warriorLevel}>{
+        i == 0 ? ($character.lookup("Starting" + reward)??0) + n : n > 0 ? n : ""
+      }</div>
     {/each}
-    <div class="tracker-cell-total">Total</div>
-    
-    {#each Object.entries($character.specialistTrackerPerks) as [reward, arr]}
-      <div class="tracker-cell-label">{reward}</div>
-      {#each arr as n, i }
-        <div class="tracker-cell-reward" class:level-reached={i<=$character.specialistLevel}>{
-          i == 0 ? ($character.lookup("Starting" + reward)??0) + n : n > 0 ? n : ""
-        }</div>
-      {/each}
-      <div class="tracker-cell-total">{$character.lookup(reward)}</div>
-    {/each}
-  </div>
+    <div class="tracker-cell-total">{$character.lookup(reward)}</div>
+  {/each}
+</div>
 
-  <h2>Caster Tracker</h2>
-  <div id="arch-level-tracker">
-    <label class="tracker-cell-label label-h">
-      <h4>Level</h4>
-      <input class="number-input-small" class:invalid-input={casterInputInvalid} type="number" min=0 max=15 bind:this={casterInput} on:change={casterInputChanged}/>
-    </label>
-    
-    {#each {length: 16} as _,i }
-      <div class="tracker-cell-level" class:level-reached={i<=$character.casterLevel}>{i}</div>
+<h2>Specialist Tracker</h2>
+<div id="arch-level-tracker">
+  <label class="tracker-cell-label label-h">
+    <h4>Level</h4>
+    <input class="number-input-small" class:invalid-input={specialistInputInvalid} type="number" min=0 max=15 bind:this={specialistInput} on:change={specialistInputChanged}/>
+  </label>
+  
+  {#each {length: 16} as _,i }
+    <div class="tracker-cell-level" class:level-reached={i<=$character.specialistLevel}>{i}</div>
+  {/each}
+  <div class="tracker-cell-total">Total</div>
+  
+  {#each Object.entries($character.specialistTrackerPerks) as [reward, arr]}
+    <div class="tracker-cell-label">{reward}</div>
+    {#each arr as n, i }
+      <div class="tracker-cell-reward" class:level-reached={i<=$character.specialistLevel}>{
+        i == 0 ? ($character.lookup("Starting" + reward)??0) + n : n > 0 ? n : ""
+      }</div>
     {/each}
-    <div class="tracker-cell-total">Total</div>
-    
-    {#each Object.entries($character.casterTrackerPerks) as [reward, arr]}
-      <div class="tracker-cell-label">{reward}</div>
-      {#each arr as n, i }
-        <div class="tracker-cell-reward" class:level-reached={i<=$character.casterLevel}>{
-          i == 0 ? ($character.lookup("Starting" + reward)??0) + n : n > 0 ? n : ""
-        }</div>
-      {/each}
-      <div class="tracker-cell-total">{$character.lookup(reward)}</div>
+    <div class="tracker-cell-total">{$character.lookup(reward)}</div>
+  {/each}
+</div>
+
+<h2>Caster Tracker</h2>
+<div id="arch-level-tracker">
+  <label class="tracker-cell-label label-h">
+    <h4>Level</h4>
+    <input class="number-input-small" class:invalid-input={casterInputInvalid} type="number" min=0 max=15 bind:this={casterInput} on:change={casterInputChanged}/>
+  </label>
+  
+  {#each {length: 16} as _,i }
+    <div class="tracker-cell-level" class:level-reached={i<=$character.casterLevel}>{i}</div>
+  {/each}
+  <div class="tracker-cell-total">Total</div>
+  
+  {#each Object.entries($character.casterTrackerPerks) as [reward, arr]}
+    <div class="tracker-cell-label">{reward}</div>
+    {#each arr as n, i }
+      <div class="tracker-cell-reward" class:level-reached={i<=$character.casterLevel}>{
+        i == 0 ? ($character.lookup("Starting" + reward)??0) + n : n > 0 ? n : ""
+      }</div>
     {/each}
-  </div>
-{/if}
+    <div class="tracker-cell-total">{$character.lookup(reward)}</div>
+  {/each}
+</div>
 
 <style src="CharacterSheet.css">
 

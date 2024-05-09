@@ -1,5 +1,5 @@
 // import { persisted } from 'svelte-local-storage-store'
-import { PlayerCharacter } from './PlayerCharacter'
+import { PlayerCharacter } from './Character/PlayerCharacter'
 import { PlayerCharacterSummary } from './PlayerCharacterSummary'
 import { validate, v4 as uuidv4, NIL } from 'uuid';
 import { get, writable, type Readable, type Writable, type Updater } from 'svelte/store'
