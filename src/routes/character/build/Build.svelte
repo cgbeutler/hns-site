@@ -6,6 +6,7 @@
   import Summary from './Summary.svelte';
   import Stats from './stats/Stats.svelte';
   import Feats from './feats/Feats.svelte';
+    import Persona from './persona/Persona.svelte';
 
   export let id: string;
   export let character: Writable<PlayerCharacter>;
@@ -27,6 +28,7 @@
     <Route path="/"> <Summary bind:id={id} bind:character={character}/> </Route>
     <Route path="/stats"> <Stats bind:character={character}/> </Route>
     <Route path="/feats"> <Feats bind:character={character}/> </Route>
+    <Route path="/persona"> <Persona bind:character={character}/> </Route>
   </Router>
 {/if}
 

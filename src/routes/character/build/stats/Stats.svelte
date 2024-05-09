@@ -56,142 +56,145 @@
     
 </script>
 
-<img src="/img/icons/PlusPlusIcon.svg" alt="" height="50px"/>
-<h1> Stats & Skills Builder </h1>
-
 <div class="sheet-block">
-  <h2>Social Stats</h2>
-  
-  <table>
-    <tr>
-      <td></td>
-      <th>base</th>
-      <th>level</th>
-      <th>total</th>
-    </tr>
-    <tr>
-      <td><label for="stat-candor-input">Candor</label></td>
-      {#if $character.socialStatGenMethod === StatGenMethodEnum.Manual}
-        <td><input id="stat-candor-input" type="number" bind:value={$character.statGen_Manual[StatEnum.Candor]}/></td>
-      {:else}
-        <td><input id="stat-candor-input" type="text" value={$character.statGen_Roll[StatEnum.Candor]} disabled/></td>
-      {/if}
-      <td><input type="number" bind:value={$character.statImprovements[StatEnum.Candor]}/></td>
-      <td><input type="text" value={$character.GetStat(StatEnum.Candor)} disabled/></td>
-    </tr>
-    <tr>
-      <td><label for="stat-conscious-input">Conscious</label></td>
-      {#if $character.socialStatGenMethod === StatGenMethodEnum.Manual}
-        <td><input id="stat-conscious-input" type="number" bind:value={$character.statGen_Manual[StatEnum.Conscious]}/></td>
-      {:else}
-        <td><input id="stat-candor-input" type="text" value={$character.statGen_Roll[StatEnum.Conscious]} disabled/></td>
-      {/if}
-      <td><input type="number" bind:value={$character.statImprovements[StatEnum.Conscious]}/></td>
-      <td><input type="text" value={$character.GetStat(StatEnum.Conscious)} disabled/></td>
-    </tr>
-    <tr>
-      <td><label for="stat-cunning-input">Cunning</label></td>
-      {#if $character.socialStatGenMethod === StatGenMethodEnum.Manual}
-        <td><input id="stat-cunning-input" type="number" bind:value={$character.statGen_Manual[StatEnum.Cunning]}/></td>
-      {:else}
-        <td><input id="stat-candor-input" type="text" value={$character.statGen_Roll[StatEnum.Cunning]} disabled/></td>
-      {/if}
-      <td><input type="number" bind:value={$character.statImprovements[StatEnum.Cunning]}/></td>
-      <td><input type="text" value={$character.GetStat(StatEnum.Cunning)} disabled/></td>
-    </tr>
-    <tr>
-      <td></td>
-      {#if $character.socialStatGenMethod === StatGenMethodEnum.Manual}
-        <th> <span class:red={socialPointSum != baseStatPoints}>{baseStatPoints - socialPointSum}</span>/{baseStatPoints} </th>
-      {:else}
-        <td></td>
-      {/if}
-      <th> <span class:red={$character.StatPoints - baseStatPoints != socialImprovementSum}>{$character.StatPoints - baseStatPoints - socialImprovementSum}</span>/{$character.StatPoints - baseStatPoints} </th>
-      <td></td>
-    </tr>
-  </table>
+  <h1><img src="/img/icons/PlusPlusIcon.svg" alt=""/> Stats & Skills <img src="/img/icons/PlusPlusIcon.svg" alt=""/></h1>
 
-  <div class="sheet-row">
-    <div class="toggle-bg">
-      <button class:active={$character.socialStatGenMethod === StatGenMethodEnum.Manual} on:click={()=>{ $character.socialStatGenMethod = StatGenMethodEnum.Manual }}>Manual</button>
-      <button class:active={$character.socialStatGenMethod === StatGenMethodEnum.Roll} on:click={()=>{ $character.socialStatGenMethod = StatGenMethodEnum.Roll }}>Roll</button>
-    </div>
-  </div>
+  <div class="sheet-block-h">
+    <div class="sheet-block-v">
+      <h2>Social Stats</h2>
+      
+      <table>
+        <tr>
+          <td></td>
+          <th>base</th>
+          <th>level</th>
+          <th>total</th>
+        </tr>
+        <tr>
+          <td><label for="stat-candor-input">Candor</label></td>
+          {#if $character.socialStatGenMethod === StatGenMethodEnum.Manual}
+            <td><input id="stat-candor-input" type="number" bind:value={$character.statGen_Manual[StatEnum.Candor]}/></td>
+          {:else}
+            <td><input id="stat-candor-input" type="text" value={$character.statGen_Roll[StatEnum.Candor]} disabled/></td>
+          {/if}
+          <td><input type="number" bind:value={$character.statImprovements[StatEnum.Candor]}/></td>
+          <td><input type="text" value={$character.GetStat(StatEnum.Candor)} disabled/></td>
+        </tr>
+        <tr>
+          <td><label for="stat-conscious-input">Conscious</label></td>
+          {#if $character.socialStatGenMethod === StatGenMethodEnum.Manual}
+            <td><input id="stat-conscious-input" type="number" bind:value={$character.statGen_Manual[StatEnum.Conscious]}/></td>
+          {:else}
+            <td><input id="stat-candor-input" type="text" value={$character.statGen_Roll[StatEnum.Conscious]} disabled/></td>
+          {/if}
+          <td><input type="number" bind:value={$character.statImprovements[StatEnum.Conscious]}/></td>
+          <td><input type="text" value={$character.GetStat(StatEnum.Conscious)} disabled/></td>
+        </tr>
+        <tr>
+          <td><label for="stat-cunning-input">Cunning</label></td>
+          {#if $character.socialStatGenMethod === StatGenMethodEnum.Manual}
+            <td><input id="stat-cunning-input" type="number" bind:value={$character.statGen_Manual[StatEnum.Cunning]}/></td>
+          {:else}
+            <td><input id="stat-candor-input" type="text" value={$character.statGen_Roll[StatEnum.Cunning]} disabled/></td>
+          {/if}
+          <td><input type="number" bind:value={$character.statImprovements[StatEnum.Cunning]}/></td>
+          <td><input type="text" value={$character.GetStat(StatEnum.Cunning)} disabled/></td>
+        </tr>
+        <tr>
+          <td></td>
+          {#if $character.socialStatGenMethod === StatGenMethodEnum.Manual}
+            <th> <span class:red={socialPointSum != baseStatPoints}>{baseStatPoints - socialPointSum}</span>/{baseStatPoints} </th>
+          {:else}
+            <td></td>
+          {/if}
+          <th> <span class:red={$character.StatPoints - baseStatPoints != socialImprovementSum}>{$character.StatPoints - baseStatPoints - socialImprovementSum}</span>/{$character.StatPoints - baseStatPoints} </th>
+          <td></td>
+        </tr>
+      </table>
 
-  <div class="sheet-section">
-    {#if $character.socialStatGenMethod === StatGenMethodEnum.Roll}
       <div class="sheet-row">
-        <button on:click={rollSocialStats}>{socialPointSum != baseStatPoints?"":"Re-"}Roll {baseStatPoints}d3</button> =&gt; <input type="string" style="width: {baseStatPoints*1.2}em;" value={ rawSocialRollsString } disabled/>
+        <div class="toggle-bg">
+          <button class:active={$character.socialStatGenMethod === StatGenMethodEnum.Manual} on:click={()=>{ $character.socialStatGenMethod = StatGenMethodEnum.Manual }}>Manual</button>
+          <button class:active={$character.socialStatGenMethod === StatGenMethodEnum.Roll} on:click={()=>{ $character.socialStatGenMethod = StatGenMethodEnum.Roll }}>Roll</button>
+        </div>
       </div>
-    {/if}
-  </div>
-</div>
 
-<div class="sheet-block">
-  <h2>Exploration Stats</h2>
-  
-  <table>
-    <tr>
-      <td></td>
-      <th>base</th>
-      <th>level</th>
-      <th>total</th>
-    </tr>
-    <tr>
-      <td><label for="stat-might-input">Might</label></td>
-      {#if $character.explorationStatGenMethod === StatGenMethodEnum.Manual}
-        <td><input id="stat-might-input" type="number" bind:value={$character.statGen_Manual[StatEnum.Might]}/></td>
-      {:else}
-        <td><input id="stat-might-input" type="text" value={$character.statGen_Roll[StatEnum.Might]} disabled/></td>
-      {/if}
-      <td><input type="number" bind:value={$character.statImprovements[StatEnum.Might]}/></td>
-      <td><input type="text" value={$character.GetStat(StatEnum.Might)} disabled/></td>
-    </tr>
-    <tr>
-      <td><label for="stat-artifice-input">Artifice</label></td>
-      {#if $character.explorationStatGenMethod === StatGenMethodEnum.Manual}
-        <td><input id="stat-artifice-input" type="number" bind:value={$character.statGen_Manual[StatEnum.Artifice]}/></td>
-      {:else}
-        <td><input id="stat-artifice-input" type="text" value={$character.statGen_Roll[StatEnum.Artifice]} disabled/></td>
-      {/if}
-      <td><input type="number" bind:value={$character.statImprovements[StatEnum.Artifice]}/></td>
-      <td><input type="text" value={$character.GetStat(StatEnum.Artifice)} disabled/></td>
-    </tr>
-    <tr>
-      <td><label for="stat-tuning-input">Tuning</label></td>
-      {#if $character.explorationStatGenMethod === StatGenMethodEnum.Manual}
-        <td><input id="stat-tuning-input" type="number" bind:value={$character.statGen_Manual[StatEnum.Tuning]}/></td>
-      {:else}
-        <td><input id="stat-tuning-input" type="text" value={$character.statGen_Roll[StatEnum.Tuning]} disabled/></td>
-      {/if}
-      <td><input type="number" bind:value={$character.statImprovements[StatEnum.Tuning]}/></td>
-      <td><input type="text" value={$character.GetStat(StatEnum.Tuning)} disabled/></td>
-    </tr>
-    <tr>
-      <td></td>
-      {#if $character.explorationStatGenMethod === StatGenMethodEnum.Manual}
-        <th> <span class:red={baseStatPoints != explorationPointSum}>{baseStatPoints - explorationPointSum}</span>/{baseStatPoints} </th>
-      {:else}
-        <td></td>
-      {/if}
-      <th> <span class:red={$character.StatPoints - baseStatPoints != explorationImprovementSum}>{$character.StatPoints - baseStatPoints - explorationImprovementSum}</span>/{$character.StatPoints - baseStatPoints} </th>
-      <td></td>
-    </tr>
-  </table>
-
-  <div class="sheet-row">
-    <div class="toggle-bg">
-      <button class:active={$character.explorationStatGenMethod === StatGenMethodEnum.Manual} on:click={()=>{ $character.explorationStatGenMethod = StatGenMethodEnum.Manual }}>Manual</button>
-      <button class:active={$character.explorationStatGenMethod === StatGenMethodEnum.Roll} on:click={()=>{ $character.explorationStatGenMethod = StatGenMethodEnum.Roll }}>Roll</button>
+      <div class="sheet-section">
+        {#if $character.socialStatGenMethod === StatGenMethodEnum.Roll}
+          <div class="sheet-row">
+            <button on:click={rollSocialStats}>{socialPointSum != baseStatPoints?"":"Re-"}Roll {baseStatPoints}d3</button> =&gt; <input type="string" style="width: {baseStatPoints*1.2}em;" value={ rawSocialRollsString } disabled/>
+          </div>
+        {/if}
+      </div>
     </div>
-  </div>
-  
-  <div class="sheet-section">
-    {#if $character.explorationStatGenMethod === StatGenMethodEnum.Roll}
+
+    <div class="sheet-block-v">
+      <h2>Exploration Stats</h2>
+      
+      <table>
+        <tr>
+          <td></td>
+          <th>base</th>
+          <th>level</th>
+          <th>total</th>
+        </tr>
+        <tr>
+          <td><label for="stat-might-input">Might</label></td>
+          {#if $character.explorationStatGenMethod === StatGenMethodEnum.Manual}
+            <td><input id="stat-might-input" type="number" bind:value={$character.statGen_Manual[StatEnum.Might]}/></td>
+          {:else}
+            <td><input id="stat-might-input" type="text" value={$character.statGen_Roll[StatEnum.Might]} disabled/></td>
+          {/if}
+          <td><input type="number" bind:value={$character.statImprovements[StatEnum.Might]}/></td>
+          <td><input type="text" value={$character.GetStat(StatEnum.Might)} disabled/></td>
+        </tr>
+        <tr>
+          <td><label for="stat-artifice-input">Artifice</label></td>
+          {#if $character.explorationStatGenMethod === StatGenMethodEnum.Manual}
+            <td><input id="stat-artifice-input" type="number" bind:value={$character.statGen_Manual[StatEnum.Artifice]}/></td>
+          {:else}
+            <td><input id="stat-artifice-input" type="text" value={$character.statGen_Roll[StatEnum.Artifice]} disabled/></td>
+          {/if}
+          <td><input type="number" bind:value={$character.statImprovements[StatEnum.Artifice]}/></td>
+          <td><input type="text" value={$character.GetStat(StatEnum.Artifice)} disabled/></td>
+        </tr>
+        <tr>
+          <td><label for="stat-tuning-input">Tuning</label></td>
+          {#if $character.explorationStatGenMethod === StatGenMethodEnum.Manual}
+            <td><input id="stat-tuning-input" type="number" bind:value={$character.statGen_Manual[StatEnum.Tuning]}/></td>
+          {:else}
+            <td><input id="stat-tuning-input" type="text" value={$character.statGen_Roll[StatEnum.Tuning]} disabled/></td>
+          {/if}
+          <td><input type="number" bind:value={$character.statImprovements[StatEnum.Tuning]}/></td>
+          <td><input type="text" value={$character.GetStat(StatEnum.Tuning)} disabled/></td>
+        </tr>
+        <tr>
+          <td></td>
+          {#if $character.explorationStatGenMethod === StatGenMethodEnum.Manual}
+            <th> <span class:red={baseStatPoints != explorationPointSum}>{baseStatPoints - explorationPointSum}</span>/{baseStatPoints} </th>
+          {:else}
+            <td></td>
+          {/if}
+          <th> <span class:red={$character.StatPoints - baseStatPoints != explorationImprovementSum}>{$character.StatPoints - baseStatPoints - explorationImprovementSum}</span>/{$character.StatPoints - baseStatPoints} </th>
+          <td></td>
+        </tr>
+      </table>
+
       <div class="sheet-row">
-        <button on:click={rollExplorationStats}>{explorationPointSum != baseStatPoints?"":"Re-"}Roll {baseStatPoints}d3</button> =&gt; <input type="string" style="width: {baseStatPoints*1.2}em;" value={ rawExplorationRollsString } disabled/>
+        <div class="toggle-bg">
+          <button class:active={$character.explorationStatGenMethod === StatGenMethodEnum.Manual} on:click={()=>{ $character.explorationStatGenMethod = StatGenMethodEnum.Manual }}>Manual</button>
+          <button class:active={$character.explorationStatGenMethod === StatGenMethodEnum.Roll} on:click={()=>{ $character.explorationStatGenMethod = StatGenMethodEnum.Roll }}>Roll</button>
+        </div>
       </div>
-    {/if}
+      
+      <div class="sheet-section">
+        {#if $character.explorationStatGenMethod === StatGenMethodEnum.Roll}
+          <div class="sheet-row">
+            <button on:click={rollExplorationStats}>{explorationPointSum != baseStatPoints?"":"Re-"}Roll {baseStatPoints}d3</button> =&gt; <input type="string" style="width: {baseStatPoints*1.2}em;" value={ rawExplorationRollsString } disabled/>
+          </div>
+        {/if}
+      </div>
+    </div>
   </div>
 </div>
 

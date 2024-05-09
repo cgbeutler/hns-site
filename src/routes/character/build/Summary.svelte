@@ -11,15 +11,22 @@
     return Math.max(min, Math.min(max, n), 0);
   }
 
-  let experienceRaw: number = 0;
-  function updateExp( n?: number ) {
-    if (n != null) experienceRaw += n;
-    if (experienceRaw < 0) experienceRaw = 0;
-    
-    $character.experience = experienceRaw;
+  let expInput: HTMLInputElement;
+  let expInputInvalid: boolean = false;
+  function expInputChanged() {
+    console.log(expInput.value);
+    var raw = Number.parseInt( expInput.value );
+    console.log(raw);
+    if (raw == null || isNaN(raw) || raw < 0 || raw > 10) { expInputInvalid = true; return; }
+    expInputInvalid = false;
+    $character.experience = raw;
   }
-  function addExp() { updateExp(1) }
-  function removeExp() { updateExp(-1) }
+  function addExp() { $character.experience = clamp($character.experience + 1, 0, 10); }
+  function removeExp() { $character.experience = clamp($character.experience - 1, 0, 10); }
+  $: if (!!expInput && $character.experience !== expInput.valueAsNumber) {
+    expInput.value = $character.experience.toString();
+  }
+
 
   let levelInput: HTMLInputElement;
   let levelInputInvalid: boolean = false;
@@ -27,22 +34,23 @@
     var raw = levelInput.valueAsNumber;
     if (isNaN(raw) || raw < 1 || raw > 20) { levelInputInvalid = true; return; }
     levelInputInvalid = false;
-    $character.level = levelInput.valueAsNumber;
+    $character.level = raw;
   }
-  $: if (!!character && !!levelInput && $character != null && $character.level !== levelInput.valueAsNumber) {
-    levelInput.value = $character.level.toString();
-  }
-
-  let archetypeLevelsLeft: number = 0;
-  $: if (!!character && !!levelInput && $character != null) {
-    archetypeLevelsLeft = $character.level + 5 - $character.warriorLevel - $character.specialistLevel - $character.casterLevel
-  }
-
+  function addLevel() { $character.level = clamp($character.level + 1, 1, 20); }
+  function removeLevel() { $character.level = clamp($character.level - 1, 1, 20); }
   function levelUp() {
     if ($character.experience < 10 || $character.level >= 20) { return; }
-    updateExp(-10);
-    levelInput.valueAsNumber = $character.level+1;
-    levelInputChanged();
+    $character.experience = clamp($character.experience - 10,0,10);
+    $character.level = clamp($character.level + 1, 1, 20);
+  }
+  $: if (!!levelInput && $character.level !== levelInput.valueAsNumber) {
+    levelInput.value = $character.level.toString();
+  }
+  
+
+  let archetypeLevelsLeft: number = 0;
+  $: if (!!levelInput) {
+    archetypeLevelsLeft = $character.level + 5 - $character.warriorLevel - $character.specialistLevel - $character.casterLevel
   }
 
   
@@ -84,284 +92,271 @@
 
 </script>
 
-<img src="/img/icons/PersonaIcon.svg" alt="" height="50px"/>
-<h1> Persona Builder </h1>
-<div class="sheet-block-h">
-  <div class="sheet-block-v">
-    <h2>Character</h2>
-    <label for="character-name"> <h4 style="display:inline-block">Character Name:</h4> </label>
-    <input id="character-name" placeholder="Unnamed Character" bind:value={$character.name}>
-    <label for="character-description"> <h4 style="display:inline-block">Character Description:</h4> </label>
-    <textarea id="character-description" style="flex-grow: 1" placeholder="" bind:value={$character.description} />
-  </div>
-  <div class="sheet-block-v">
-    <h2>Background</h2>
-    Constitution, Class, and Lineage<br>selection here?
-  </div>
-</div>
+<div class="sheet-block">
+  <h1><img src="/img/icons/PromotionIcon.svg" alt=""/> Level Builder <img src="/img/icons/PromotionIcon.svg" alt=""/></h1>
 
-<h2>Experience</h2>
-<div class="sheet-block-h" style="flex: 0 0 auto; justify-content:center; gap: 5px">
-  <button on:click={removeExp}>-</button>
-  <p style="font-family: 'Courier New', Courier, monospace; text-align: center;">
-    <input class="number-input-small" type="text" min=0 bind:value={experienceRaw} on:change={()=>updateExp(0)}/><br>
-    {#each {length: experienceRaw%10} as _,i }█{/each}{#each {length: 9-(experienceRaw%10)} as _,i }░{/each}
-  </p>
-  <button on:click={addExp}>+</button>
-</div>
-<button disabled={experienceRaw < 10 || $character.level >= 20} style="flex-basis:25%" on:click={levelUp}>{$character.level >= 20 ? "Max Level" : "Level Up"}</button>
+  <div class="sheet-block-v">
+    <div class="sheet-block-h">
+      <label for="character-name" style="line-height: 1em;"> <p>Character Name:</p> </label>
+      <input id="character-name" style="align-self: stretch;" placeholder="Unnamed Character" bind:value={$character.name}>
+    </div>
 
-<h2>Level Tracker</h2>
-<div id="level-tracker">
-  <label class="tracker-cell-label label-h">
-    <h4>Level</h4>
+
+    <h2 style="margin-bottom: 0;">Experience</h2>
+
+    <p style="font-size:14pt">[{#each {length: $character.experience} as _,i }◈{/each}{#each {length: 10-($character.experience)} as _,i }◇{/each}]</p>
+    <div class="sheet-block-h" style="gap: 5px; margin-top: 5px;">
+      <button disabled={$character.experience <= 0} on:click={removeExp} class="icon-button">-</button>
+      <p style="font-family: 'Courier New', Courier, monospace; text-align: center;">
+        <input class="number-input-small" class:invalid-input={expInputInvalid} type="text" min=0 max=10 bind:this={expInput} on:change={expInputChanged}/><br>
+      </p>
+      {#if $character.experience <= 9}
+      <button on:click={addExp} class="icon-button">+</button>
+      {:else if $character.level < 20}
+        <button class="icon-button bright" on:click={levelUp}><img src="/img/icons/PromotionIcon.svg" alt="Level Up"/></button>
+      {:else}
+        <p style="padding: 0; line-height: 1em; font-size: small;">max<br>level</p>
+      {/if}
+    </div>
+    
+
+    <h2 style="margin-bottom: 0;">Level</h2>
+
     <input class="number-input-small" class:invalid-input={levelInputInvalid} type="number" min=1 max=20 bind:this={levelInput} on:change={levelInputChanged}/>
-  </label>
-  
-  {#each {length: 20} as _,i }
-    <div class="tracker-cell-level" class:level-reached={(i+1)<=$character.level}>{i+1}</div>
-  {/each}
-  <div class="tracker-cell-total">Total</div>
-  
-  {#each Object.entries($character.levelTrackerPerks) as [reward, levelArray]}
-    <div class="tracker-cell-label">{reward}</div>
-    {#each levelArray as n, i }
-      <div class="tracker-cell-reward" class:level-reached={(i+1)<=$character.level}>{n > 0 ? n : ""}</div>
-    {/each}
-    <div class="tracker-cell-total">{$character.lookup(reward)}</div>
-  {/each}
-</div>
-
-<h2>Archetypes</h2>
-<label class="label-h" style="justify-content: center;">
-  Archetype Levels To Assign
-  <input class="number-input-small" class:invalid-input={archetypeLevelsLeft < 0} value={archetypeLevelsLeft} disabled>
-</label>
-
-<h2>Warrior Tracker</h2>
-<div id="arch-level-tracker">
-  <label class="tracker-cell-label label-h">
-    <h4>Level</h4>
+    <label class="label-h" style="justify-content: center;">
+      Archetype Levels To Assign
+      <input class="number-input-small" class:invalid-input={archetypeLevelsLeft < 0} value={archetypeLevelsLeft} disabled>
+    </label>
+    Warrior
     <input class="number-input-small" class:invalid-input={warriorInputInvalid} type="number" min=0 max=15 bind:this={warriorInput} on:change={warriorInputChanged}/>
-  </label>
-  
-  {#each {length: 16} as _,i }
-    <div class="tracker-cell-level" class:level-reached={i<=$character.warriorLevel}>{i}</div>
-  {/each}
-  <div class="tracker-cell-total">Total</div>
-  
-  {#each Object.entries($character.warriorTrackerPerks) as [reward, arr]}
-    <div class="tracker-cell-label">{reward}</div>
-    {#each arr as n, i }
-      <div class="tracker-cell-reward" class:level-reached={i<=$character.warriorLevel}>{
-        i == 0 ? ($character.lookup("Starting" + reward)??0) + n : n > 0 ? n : ""
-      }</div>
-    {/each}
-    <div class="tracker-cell-total">{$character.lookup(reward)}</div>
-  {/each}
-</div>
-
-<h2>Specialist Tracker</h2>
-<div id="arch-level-tracker">
-  <label class="tracker-cell-label label-h">
-    <h4>Level</h4>
+    Specialist
     <input class="number-input-small" class:invalid-input={specialistInputInvalid} type="number" min=0 max=15 bind:this={specialistInput} on:change={specialistInputChanged}/>
-  </label>
-  
-  {#each {length: 16} as _,i }
-    <div class="tracker-cell-level" class:level-reached={i<=$character.specialistLevel}>{i}</div>
-  {/each}
-  <div class="tracker-cell-total">Total</div>
-  
-  {#each Object.entries($character.specialistTrackerPerks) as [reward, arr]}
-    <div class="tracker-cell-label">{reward}</div>
-    {#each arr as n, i }
-      <div class="tracker-cell-reward" class:level-reached={i<=$character.specialistLevel}>{
-        i == 0 ? ($character.lookup("Starting" + reward)??0) + n : n > 0 ? n : ""
-      }</div>
-    {/each}
-    <div class="tracker-cell-total">{$character.lookup(reward)}</div>
-  {/each}
-</div>
-
-<h2>Caster Tracker</h2>
-<div id="arch-level-tracker">
-  <label class="tracker-cell-label label-h">
-    <h4>Level</h4>
+    Caster
     <input class="number-input-small" class:invalid-input={casterInputInvalid} type="number" min=0 max=15 bind:this={casterInput} on:change={casterInputChanged}/>
-  </label>
-  
-  {#each {length: 16} as _,i }
-    <div class="tracker-cell-level" class:level-reached={i<=$character.casterLevel}>{i}</div>
-  {/each}
-  <div class="tracker-cell-total">Total</div>
-  
-  {#each Object.entries($character.casterTrackerPerks) as [reward, arr]}
-    <div class="tracker-cell-label">{reward}</div>
-    {#each arr as n, i }
-      <div class="tracker-cell-reward" class:level-reached={i<=$character.casterLevel}>{
-        i == 0 ? ($character.lookup("Starting" + reward)??0) + n : n > 0 ? n : ""
-      }</div>
-    {/each}
-    <div class="tracker-cell-total">{$character.lookup(reward)}</div>
-  {/each}
+
+
+    <h2>Upcoming Perks</h2>
+
+    <div id="level-tracker">
+      <div class="tracker-cell-label"> Character Level </div>
+      
+      {#each {length: 20} as _,i }
+        <div class="tracker-cell-level" class:level-reached={(i+1)<=$character.level}>{i+1}</div>
+      {/each}
+      <div class="tracker-cell-total">Total</div>
+      
+      {#each Object.entries($character.levelTrackerPerks) as [reward, levelArray]}
+        <div class="tracker-cell-label">{reward}</div>
+        {#each levelArray as n, i }
+          <div class="tracker-cell-reward" class:level-reached={(i+1)<=$character.level}>{n > 0 ? n : ""}</div>
+        {/each}
+        <div class="tracker-cell-total">{$character.lookup(reward)}</div>
+      {/each}
+    </div>
+
+
+    <h4>Warrior</h4>
+
+    <div id="arch-level-tracker">
+      <div class="tracker-cell-label"> Warrior Level </div>
+      
+      {#each {length: 16} as _,i }
+        <div class="tracker-cell-level" class:level-reached={i<=$character.warriorLevel}>{i}</div>
+      {/each}
+      <div class="tracker-cell-total">Total</div>
+      
+      {#each Object.entries($character.warriorTrackerPerks) as [reward, arr]}
+        <div class="tracker-cell-label">{reward}</div>
+        {#each arr as n, i }
+          <div class="tracker-cell-reward" class:level-reached={i<=$character.warriorLevel}>{
+            i == 0 ? ($character.lookup("Starting" + reward)??0) + n : n > 0 ? n : ""
+          }</div>
+        {/each}
+        <div class="tracker-cell-total">{$character.lookup(reward)}</div>
+      {/each}
+    </div>
+
+
+    <h4>Specialist</h4>
+
+    <div id="arch-level-tracker">
+      <div class="tracker-cell-label"> Specialist Level </div>
+      
+      {#each {length: 16} as _,i }
+        <div class="tracker-cell-level" class:level-reached={i<=$character.specialistLevel}>{i}</div>
+      {/each}
+      <div class="tracker-cell-total">Total</div>
+      
+      {#each Object.entries($character.specialistTrackerPerks) as [reward, arr]}
+        <div class="tracker-cell-label">{reward}</div>
+        {#each arr as n, i }
+          <div class="tracker-cell-reward" class:level-reached={i<=$character.specialistLevel}>{
+            i == 0 ? ($character.lookup("Starting" + reward)??0) + n : n > 0 ? n : ""
+          }</div>
+        {/each}
+        <div class="tracker-cell-total">{$character.lookup(reward)}</div>
+      {/each}
+    </div>
+
+
+    <h4>Caster</h4>
+
+    <div id="arch-level-tracker">
+      <div class="tracker-cell-label"> Caster Level </div>
+      
+      {#each {length: 16} as _,i }
+        <div class="tracker-cell-level" class:level-reached={i<=$character.casterLevel}>{i}</div>
+      {/each}
+      <div class="tracker-cell-total">Total</div>
+      
+      {#each Object.entries($character.casterTrackerPerks) as [reward, arr]}
+        <div class="tracker-cell-label">{reward}</div>
+        {#each arr as n, i }
+          <div class="tracker-cell-reward" class:level-reached={i<=$character.casterLevel}>{
+            i == 0 ? ($character.lookup("Starting" + reward)??0) + n : n > 0 ? n : ""
+          }</div>
+        {/each}
+        <div class="tracker-cell-total">{$character.lookup(reward)}</div>
+      {/each}
+    </div>
+  </div>
 </div>
 
 <style src="CharacterSheet.css">
 
-#level-tracker {
-  background-color: rgb(0, 0, 0);
-  display: grid;
-  grid-template-columns: auto repeat(20, auto) auto;
-  row-gap: 1px;
-  column-gap: 1px;
-  flex: 0 0 auto;
-  max-width: 100%;
-  overflow: scroll;
-}
-#level-tracker > :nth-child(22n+1),
-#level-tracker > :nth-child(22n+6),
-#level-tracker > :nth-child(22n+11),
-#level-tracker > :nth-child(22n+16),
-#level-tracker > :nth-child(22n+21) {
-  margin-right: 3px;
-}
-#level-tracker > :nth-child(n+1):nth-child(-n+22),
-#level-tracker > :nth-child(n+67):nth-child(-n+88) {
-  margin-bottom: 3px;
-}
+  #level-tracker {
+    background-color: rgb(0, 0, 0);
+    display: grid;
+    grid-template-columns: auto repeat(20, auto) auto;
+    row-gap: 1px;
+    column-gap: 1px;
+    flex: 0 0 auto;
+    max-width: 100%;
+    overflow: scroll;
+  }
+  #level-tracker > :nth-child(22n+1),
+  #level-tracker > :nth-child(22n+6),
+  #level-tracker > :nth-child(22n+11),
+  #level-tracker > :nth-child(22n+16),
+  #level-tracker > :nth-child(22n+21) {
+    margin-right: 3px;
+  }
+  #level-tracker > :nth-child(n+1):nth-child(-n+22),
+  #level-tracker > :nth-child(n+67):nth-child(-n+88) {
+    margin-bottom: 3px;
+  }
 
-#arch-level-tracker {
-  background-color: rgb(0, 0, 0);
-  display: grid;
-  grid-template-columns: auto repeat(16, auto) auto;
-  row-gap: 1px;
-  column-gap: 1px;
-  flex: 0 0 auto;
-  max-width: 100%;
-  overflow: scroll;
-}
-#arch-level-tracker > :nth-child(18n+1),
-#arch-level-tracker > :nth-child(18n+2),
-#arch-level-tracker > :nth-child(18n+7),
-#arch-level-tracker > :nth-child(18n+12),
-#arch-level-tracker > :nth-child(18n+17) {
-  margin-right: 3px;
-}
-#arch-level-tracker > :nth-child(n+1):nth-child(-n+18),
-#arch-level-tracker > :nth-child(n+55):nth-child(-n+72) {
-  margin-bottom: 3px;
-}
+  #arch-level-tracker {
+    background-color: rgb(0, 0, 0);
+    display: grid;
+    grid-template-columns: auto repeat(16, auto) auto;
+    row-gap: 1px;
+    column-gap: 1px;
+    flex: 0 0 auto;
+    max-width: 100%;
+    overflow: scroll;
+  }
+  #arch-level-tracker > :nth-child(18n+1),
+  #arch-level-tracker > :nth-child(18n+2),
+  #arch-level-tracker > :nth-child(18n+7),
+  #arch-level-tracker > :nth-child(18n+12),
+  #arch-level-tracker > :nth-child(18n+17) {
+    margin-right: 3px;
+  }
+  #arch-level-tracker > :nth-child(n+1):nth-child(-n+18),
+  #arch-level-tracker > :nth-child(n+55):nth-child(-n+72) {
+    margin-bottom: 3px;
+  }
 
-.tracker-cell-label {
-  background-color: rgb(48, 48, 48);
-  padding: 2px 4px;
-  min-width: max-content;
-  width: auto;
-}
-.tracker-cell-level {
-  min-width: 1.75em;
-  width: 1.75em;
-  background-color: rgb(24, 24, 24);
-  color: rgb(200,200,200);
-  padding: 2px;
-  text-align: center;
-}
-.tracker-cell-level.level-reached {
-  background-color: rgb(48, 48, 48);
-  color: rgb(255,255,240);
-}
-.tracker-cell-total {
-  background-color: rgb(48, 48, 48);
-  padding: 2px;
-  text-align: center;
-  padding: 0px 8px;
-}
-.tracker-cell-reward {
-  min-width: 1.75em;
-  width: 1.75em;
-  background-color: rgb(12, 12, 12);
-  color: rgb(192,192,192);
-  padding: 2px;
-  text-align: center;
-}
-.tracker-cell-reward.level-reached {
-  background-color: rgb(24, 24, 24);
-  color: rgb(200,200,200);
-}
+  .tracker-cell-label {
+    background-color: rgb(48, 48, 48);
+    padding: 2px 4px;
+    min-width: max-content;
+    width: auto;
+    position: sticky;
+    left: 0;
+  }
+  .tracker-cell-level {
+    min-width: 1.75em;
+    width: 1.75em;
+    background-color: rgb(24, 24, 24);
+    color: rgb(200,200,200);
+    padding: 2px;
+    text-align: center;
+  }
+  .tracker-cell-level.level-reached {
+    background-color: rgb(48, 48, 48);
+    color: rgb(255,255,240);
+  }
+  .tracker-cell-total {
+    background-color: rgb(48, 48, 48);
+    padding: 2px;
+    text-align: center;
+    padding: 0px 8px;
+    position: sticky;
+    right: 0;
+  }
+  .tracker-cell-reward {
+    min-width: 1.75em;
+    width: 1.75em;
+    background-color: rgb(12, 12, 12);
+    color: rgb(192,192,192);
+    padding: 2px;
+    text-align: center;
+  }
+  .tracker-cell-reward.level-reached {
+    background-color: rgb(24, 24, 24);
+    color: rgb(200,200,200);
+  }
 
-.sheet-block {
-  display: flex;
-  align-items: flex-start;
-  text-align: left;
-}
+  .label-h {
+    display: flex;
+    flex-direction: row;
+    gap: 0px 10px;
+  }
 
-:is(h1, h2, h3, h4, h5, h6) {
-  text-align: center;
-}
+  .number-input-small {
+    width: 4em;
+    justify-self: center;
+    align-self: center;
+    text-align: center;
+  }
 
+  .invalid-input {
+    border: solid 1px red;
+  }
 
-.sheet-block-v {
-  display: flex;
-  flex-direction: column;
-}
-
-.sheet-block-h {
-  display: flex;
-  justify-content: space-evenly;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
-
-.label-h {
-  display: flex;
-  flex-direction: row;
-  gap: 0px 10px;
-}
-
-.number-input-small {
-  width: 4em;
-  justify-self: center;
-  align-self: center;
-  text-align: center;
-}
-
-.invalid-input {
-  border: solid 1px red;
-}
-
-/* This worked okay as a cool display that doubled as an expanding textbox
-p[contenteditable] {
-  margin: 0px 0px 0px 24px;
-  flex-grow: 1;
-  width: calc(100% - 34px);
-  max-width: none;
-  
-  font-family: monospace;
-  text-rendering: auto;
-  letter-spacing: normal;
-  word-spacing: normal;
-  line-height: normal;
-  text-transform: none;
-  text-indent: 0px;
-  text-shadow: none;
-  display: inline-block;
-  text-align: start;
-  appearance: auto;
-  -webkit-rtl-ordering: logical;
-  resize: auto;
-  cursor: text;
-  white-space-collapse: preserve;
-  text-wrap: wrap;
-  overflow-wrap: break-word;
-  background-color: field;
-  column-count: initial !important;
-  writing-mode: horizontal-tb !important;
-  border-width: 1px;
-  border-style: solid;
-  border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
-  border-image: initial;
-  padding: 2px;
-} */
+  /* This worked okay as a cool display that doubled as an expanding textbox
+  p[contenteditable] {
+    margin: 0px 0px 0px 24px;
+    flex-grow: 1;
+    width: calc(100% - 34px);
+    max-width: none;
+    
+    font-family: monospace;
+    text-rendering: auto;
+    letter-spacing: normal;
+    word-spacing: normal;
+    line-height: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: start;
+    appearance: auto;
+    -webkit-rtl-ordering: logical;
+    resize: auto;
+    cursor: text;
+    white-space-collapse: preserve;
+    text-wrap: wrap;
+    overflow-wrap: break-word;
+    background-color: field;
+    column-count: initial !important;
+    writing-mode: horizontal-tb !important;
+    border-width: 1px;
+    border-style: solid;
+    border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
+    border-image: initial;
+    padding: 2px;
+  } */
 </style>

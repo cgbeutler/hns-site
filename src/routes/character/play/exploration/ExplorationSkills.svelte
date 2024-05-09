@@ -158,7 +158,7 @@
 }
 /* On mouse-over, add a grey background color */
 .inspiration-check.checked:hover {
-  background-image: url("/img/icons/inspiration_hover.svg");
+  background-image: url("/img/icons/inspiration_filled_hover.svg");
 }
 
 
@@ -188,7 +188,7 @@
   font-variant-ligatures: no-common-ligatures;
 }
 
-@media (max-width: 660px) {
+@media only screen and (max-width: 768px) {
   .skill-cell {
     flex-direction: column;
     justify-content: flex-start;

@@ -4,3 +4,8 @@
   
   export let character: Writable<PlayerCharacter>;
 </script>
+
+<div class="sheet-block-v align-left">
+  <h2>Background</h2>
+  Constitution, Class, and Lineage<br>selection here?
+</div>

@@ -108,13 +108,18 @@ You can tell the book contains
     gap: 4px
   }
 
-.hidden {
-  display: none;
-  opacity: 0;
-  filter: opacity(0);
-}
+  .hidden {
+    display: none;
+    opacity: 0;
+    filter: opacity(0);
+  }
 
   #end-matter {
     margin-top: auto;
+  }
+
+  /* Small Screens */
+  @media only screen and (min-width: 768px) {
+    
   }
 </style>

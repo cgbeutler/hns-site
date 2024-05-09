@@ -32,10 +32,11 @@
     <Router>
       <Route path="/build/*">
         <div class="toggle-bg-v" class:slim={!expanded}>
-          <Link to="/character/{id}/build" getProps={getSubLinkProps}><img src="/img/icons/PersonaIcon.svg" alt={expanded?"":"Persona"}/>{#if expanded}&nbsp;Persona{/if}</Link>
+          <Link to="/character/{id}/build" getProps={getSubLinkProps}><img src="/img/icons/PromotionIcon.svg" alt={expanded?"":"Level"}/>{#if expanded}&nbsp;Level{/if}</Link>
           <Link to="/character/{id}/build/stats" getProps={getSubLinkProps}><img src="/img/icons/PlusPlusIcon.svg" alt={expanded?"":"Stats & Skills"}/>{#if expanded}&nbsp;Stats & Skills{/if}</Link>
           <Link to="/character/{id}/build/feats" getProps={getSubLinkProps}><img src="/img/icons/StarIcon.svg" alt={expanded?"":"Feats"}/>{#if expanded}&nbsp;Feats{/if}</Link>
           <Link to="/character/{id}/build/abilities" getProps={getSubLinkProps}><img src="/img/icons/AbilitiesIcon.svg" alt={expanded?"":"Abilities"}/>{#if expanded}&nbsp;Abilities{/if}</Link>
+          <Link to="/character/{id}/build/persona" getProps={getSubLinkProps}><img src="/img/icons/PersonaIcon.svg" alt={expanded?"":"Persona"}/>{#if expanded}&nbsp;Persona{/if}</Link>
         </div>
       </Route>
       <Route path="/play/*">
@@ -43,8 +44,8 @@
           <Link to="/character/{id}/play" getProps={getSubLinkProps}><img src="/img/icons/HeartIcon.svg" alt={expanded?"":"Status"}/>{#if expanded}&nbsp;Status{/if}</Link>
           <Link to="/character/{id}/play/social" getProps={getSubLinkProps}><img src="/img/icons/SocialIcon.svg" alt={expanded?"":"Social"}/>{#if expanded}&nbsp;Social{/if}</Link>
           <Link to="/character/{id}/play/exploration" getProps={getSubLinkProps}><img src="/img/icons/MapIcon.svg" alt={expanded?"":"Exploration"}/>{#if expanded}&nbsp;Exploration{/if}</Link>
-          <Link to="/character/{id}/play/skills" getProps={getSubLinkProps}>Actions</Link>
-          <Link to="/character/{id}/play/inventory" getProps={getSubLinkProps}>Inventory</Link>
+          <Link to="/character/{id}/play/abilities" getProps={getSubLinkProps}><img src="/img/icons/AbilitiesIcon.svg" alt={expanded?"":"Abilities"}/>{#if expanded}&nbsp;Abilities{/if}</Link>
+          <Link to="/character/{id}/play/inventory" getProps={getSubLinkProps}><img src="/img/icons/InventoryIcon.svg" alt={expanded?"":"Exploration"}/>{#if expanded}&nbsp;Inventory{/if}</Link>
         </div>
       </Route>
     </Router>
