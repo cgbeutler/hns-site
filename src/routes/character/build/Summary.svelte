@@ -215,6 +215,7 @@
     position: sticky;
     left: 0;
   }
+  @media only screen and (max-width: 768px) { .tracker-cell-label { position: relative; } }
   .tracker-cell-level {
     min-width: 1.75em;
     width: 1.75em;
@@ -235,6 +236,7 @@
     position: sticky;
     right: 0;
   }
+  @media only screen and (max-width: 768px) { .tracker-cell-total { position: relative; } }
   .tracker-cell-reward {
     min-width: 1.75em;
     width: 1.75em;
