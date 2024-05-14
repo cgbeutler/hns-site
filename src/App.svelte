@@ -2,14 +2,12 @@
 	import { fade } from 'svelte/transition'
   import { Router, Route } from 'svelte-routing';
   import { Modals, closeModal, openModal } from 'svelte-modals'
+  import { SvelteToast } from '@zerodevx/svelte-toast'
   import NavModal from './lib/NavModal.svelte';
 
   import Account from './routes/account/Account.svelte';
-  import AgeRoller from "./routes/dice/ageroller/AgeRoller.svelte";
   import Character from './routes/character/Character.svelte';
   import Characters from './routes/characters/Characters.svelte';
-  import Dice from "./routes/dice/Dice.svelte";
-  import EyeRoller from "./routes/dice/eyeroller/EyeRoller.svelte";
   import Home from "./routes/Home.svelte";
   import NotFound from './routes/NotFound.svelte';
   import Srd from './routes/srd/Srd.svelte';
@@ -23,6 +21,13 @@
       closeModal();
       event.preventDefault();
     }
+  }
+
+  const toastOptions = {
+    duration: 6000,    // duration of progress bar tween to the `next` value
+    pausable: true,    // pause progress bar tween on mouse hover
+    reversed: true,   // insert new toast to bottom of stack
+    // theme: {},         // css var overrides
   }
 </script>
 
@@ -40,12 +45,11 @@
   <Route path="/" component={Home} />
   <Route path="/character" component={Characters} />
   <Route path="/character/:id/*" component={Character} />
-  <Route path="/dice" component={Dice} />
-  <Route path="/dice/ageroller" component={AgeRoller} />
-  <Route path="/dice/eyeroller" component={EyeRoller} />
   <Route path="/srd" component={Srd} />
   <Route path="/account" component={Account} />
   <Route path="/login" component={Login} />
+
+  <SvelteToast options={toastOptions} />
 </Router>
 
 <style>

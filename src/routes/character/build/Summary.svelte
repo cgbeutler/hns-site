@@ -53,9 +53,9 @@
       <h2 style="margin-bottom: 0;">Archetype Levels</h2>
       <table class="point-table">
         <tr>
-          <td>To Spend</td>
-          <th>
-            {$character.level + 5 - $character.warriorLevel - $character.specialistLevel - $character.casterLevel}/{$character.level + 5}
+          <td></td>
+          <th>To Spend<br>
+            {$character.warriorLevel + $character.specialistLevel + $character.casterLevel}/{$character.level + 5}
           </th>
         </tr>
         <tr>

@@ -17,12 +17,10 @@
 {#if error}
   <div class="sheet-block">{error}</div>
 {:else if !character || $character == null}
-  <div class="page">
-    <h2>Loading...</h2>
-  </div>
+  <h2>Loading...</h2>
 {:else}
 
-  <div class="sheet-block" style="display: flex; flex-direction: row; flex-wrap: nowrap; flex-grow: 1;">
+  <div class="sheet-block">
     <div style="display:flex; flex-direction: column;">
       <p id="name-label">{$character.name && $character.name.length>0 ? $character.name : "Unnamed Character"}</p>
     </div>
@@ -36,6 +34,7 @@
     <Route path="/social"> <Social bind:character={character}/> </Route>
     <Route path="/exploration"> <Exploration bind:character={character}/> </Route>
   </Router>
+  
 {/if}
 
 <style>

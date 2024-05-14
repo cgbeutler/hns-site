@@ -70,7 +70,7 @@
     flex: 1 1 auto;
     text-align: center;
     border-width: 0px;
-    border-radius: 8px;
+    border-radius: 12px;
     padding: 0px;
     appearance: none;
     --webkit-appearance: none;
