@@ -1,0 +1,54 @@
+
+.point-table {
+  background-color: black;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 8px;
+  overflow: scroll;
+  border-collapse: separate;
+  border-spacing: 0 0;
+}
+
+.point-table td {
+  font-size: 12pt;
+  line-height: 12pt;
+  text-align: center;
+  padding: 2px;
+}
+
+.point-table input,
+.point-table select {
+  width: 3em;
+  text-align: center;
+  margin: auto;
+}
+
+.point-table > tr > th {
+  font-size: 10pt;
+  line-height: 10pt;
+  margin: 0px;
+  padding: 5px;
+  border: solid 1px gray;
+  border-radius: 8px;
+}
+
+.point-table > tr:first-of-type > th:not(.row-header) {
+  text-align: center;
+  border-bottom: 0px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.point-table > tr:last-of-type > th:not(.row-header) {
+  text-align: center;
+  border-top: 0px;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+}
+
+.point-table > tr > th:first-child:not(.col-header) {
+  text-align: center;
+  border-right: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}

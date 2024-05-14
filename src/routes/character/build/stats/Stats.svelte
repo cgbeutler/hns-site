@@ -1,7 +1,11 @@
 <script lang="ts">
+  import "../../../../lib/css/PointTable.css"
   import type { Writable } from "svelte/store";
   import { StatGenMethodEnum, type PlayerCharacter } from "../../../../lib/Character/PlayerCharacter";
-  import { StatEnum } from "../../../../lib/Character/CharacterEnums";
+  import { ExplorationSkillEnum, ExplorationStats, MajorExplorationSkills, MajorSocialSkills, MinorExplorationSkills, MinorSocialSkills, SocialSkillEnum, SocialStats, StatEnum } from "../../../../lib/Character/CharacterEnums";
+  import TextBox from "../../../../lib/Inputs/TextBox.svelte";
+  import { chunk } from "../../../../lib/Helpers/ArrayHelpers";
+  import IntSelect from "../../../../lib/Inputs/IntSelect.svelte";
 
   export let character: Writable<PlayerCharacter>;
 
@@ -53,6 +57,19 @@
   let explorationImprovementSum = 0;
   $: explorationImprovementSum = ($character.statImprovements.Might??0) + ($character.statImprovements.Artifice??0) + ($character.statImprovements.Tuning??0);
 
+  let majorSocialSkillPointsAvailable: number = 0;
+  $: majorSocialSkillPointsAvailable = Math.floor( $character.SocialSkillPoints / 2 );
+  let majorSocialSkillPointSum: number = 0;
+  $: majorSocialSkillPointSum = Object.entries($character.socialSkills).filter(e => MajorSocialSkills.includes(<SocialSkillEnum>e[0])).reduce((sum, entry) => sum + entry[1].points, 0);
+  let socialSkillPointSum: number = 0;
+  $: socialSkillPointSum = Object.entries($character.socialSkills).reduce((sum, entry) => sum + entry[1].points, 0);
+  
+  let majorExplorationSkillPointsAvailable: number = 0;
+  $: majorExplorationSkillPointsAvailable = Math.floor( $character.ExplorationSkillPoints / 2 );
+  let majorExplorationSkillPointSum: number = 0;
+  $: majorExplorationSkillPointSum = Object.entries($character.explorationSkills).filter(e => MajorExplorationSkills.includes(<ExplorationSkillEnum>e[0])).reduce((sum, entry) => sum + entry[1].points, 0);
+  let explorationSkillPointSum: number = 0;
+  $: explorationSkillPointSum = Object.entries($character.explorationSkills).reduce((sum, entry) => sum + entry[1].points, 0);
     
 </script>
 
@@ -62,55 +79,6 @@
   <div class="sheet-block-h">
     <div class="sheet-block-v">
       <h2>Social Stats</h2>
-      
-      <table>
-        <tr>
-          <td></td>
-          <th>base</th>
-          <th>level</th>
-          <th>total</th>
-        </tr>
-        <tr>
-          <td><label for="stat-candor-input">Candor</label></td>
-          {#if $character.socialStatGenMethod === StatGenMethodEnum.Manual}
-            <td><input id="stat-candor-input" type="number" bind:value={$character.statGen_Manual[StatEnum.Candor]}/></td>
-          {:else}
-            <td><input id="stat-candor-input" type="text" value={$character.statGen_Roll[StatEnum.Candor]} disabled/></td>
-          {/if}
-          <td><input type="number" bind:value={$character.statImprovements[StatEnum.Candor]}/></td>
-          <td><input type="text" value={$character.GetStat(StatEnum.Candor)} disabled/></td>
-        </tr>
-        <tr>
-          <td><label for="stat-conscious-input">Conscious</label></td>
-          {#if $character.socialStatGenMethod === StatGenMethodEnum.Manual}
-            <td><input id="stat-conscious-input" type="number" bind:value={$character.statGen_Manual[StatEnum.Conscious]}/></td>
-          {:else}
-            <td><input id="stat-candor-input" type="text" value={$character.statGen_Roll[StatEnum.Conscious]} disabled/></td>
-          {/if}
-          <td><input type="number" bind:value={$character.statImprovements[StatEnum.Conscious]}/></td>
-          <td><input type="text" value={$character.GetStat(StatEnum.Conscious)} disabled/></td>
-        </tr>
-        <tr>
-          <td><label for="stat-cunning-input">Cunning</label></td>
-          {#if $character.socialStatGenMethod === StatGenMethodEnum.Manual}
-            <td><input id="stat-cunning-input" type="number" bind:value={$character.statGen_Manual[StatEnum.Cunning]}/></td>
-          {:else}
-            <td><input id="stat-candor-input" type="text" value={$character.statGen_Roll[StatEnum.Cunning]} disabled/></td>
-          {/if}
-          <td><input type="number" bind:value={$character.statImprovements[StatEnum.Cunning]}/></td>
-          <td><input type="text" value={$character.GetStat(StatEnum.Cunning)} disabled/></td>
-        </tr>
-        <tr>
-          <td></td>
-          {#if $character.socialStatGenMethod === StatGenMethodEnum.Manual}
-            <th> <span class:red={socialPointSum != baseStatPoints}>{baseStatPoints - socialPointSum}</span>/{baseStatPoints} </th>
-          {:else}
-            <td></td>
-          {/if}
-          <th> <span class:red={$character.StatPoints - baseStatPoints != socialImprovementSum}>{$character.StatPoints - baseStatPoints - socialImprovementSum}</span>/{$character.StatPoints - baseStatPoints} </th>
-          <td></td>
-        </tr>
-      </table>
 
       <div class="sheet-row">
         <div class="toggle-bg">
@@ -118,67 +86,61 @@
           <button class:active={$character.socialStatGenMethod === StatGenMethodEnum.Roll} on:click={()=>{ $character.socialStatGenMethod = StatGenMethodEnum.Roll }}>Roll</button>
         </div>
       </div>
+      
+      <table class="point-table">
+        <tr>
+          <td></td>
+          {#each SocialStats as socialStat}
+            <th>{socialStat}</th>
+          {/each}
+        </tr>
+        <tr>
+          <th>
+            starting<br/>
+            {#if $character.socialStatGenMethod === StatGenMethodEnum.Manual}
+              <span class:red={socialPointSum != baseStatPoints}>{socialPointSum}</span>/{baseStatPoints}
+            {:else if  $character.socialStatGenMethod === StatGenMethodEnum.Roll}
+              (rolled)
+            {/if}
+          </th>
+          {#each SocialStats as socialStat}
+            <td>
+              {#if $character.socialStatGenMethod === StatGenMethodEnum.Manual}
+                <IntSelect bind:value={$character.statGen_Manual[socialStat]} min={-1} max={5} />
+              {:else}
+                <TextBox id="stat-{socialStat}-input" value={$character.statGen_Roll[socialStat]} disabled/>
+              {/if}
+            </td>
+          {/each}
+        </tr>
+        <tr>
+          <th>points<br><span class:red={$character.StatPoints - baseStatPoints != socialImprovementSum}>{socialImprovementSum}</span>/{$character.StatPoints - baseStatPoints}</th>
+          {#each SocialStats as socialStat}
+            {@const stat = $character.socialStatGenMethod === StatGenMethodEnum.Manual ? $character.statGen_Manual[socialStat] : ($character.statGen_Roll[socialStat]??-1) }
+            <td>
+              <IntSelect bind:value={$character.statImprovements[socialStat]} min={0} max={5-stat} />
+            </td>
+          {/each}
+        </tr>
+        <tr>
+          <th class="row-header">total</th>
+          {#each SocialStats as socialStat}
+            <td><TextBox value={$character.GetStat(StatEnum.Candor)} disabled/></td>
+          {/each}
+        </tr>
+      </table>
 
-      <div class="sheet-section">
-        {#if $character.socialStatGenMethod === StatGenMethodEnum.Roll}
+      {#if $character.socialStatGenMethod === StatGenMethodEnum.Roll}
+        <div class="sheet-section">
           <div class="sheet-row">
             <button on:click={rollSocialStats}>{socialPointSum != baseStatPoints?"":"Re-"}Roll {baseStatPoints}d3</button> =&gt; <input type="string" style="width: {baseStatPoints*1.2}em;" value={ rawSocialRollsString } disabled/>
           </div>
-        {/if}
-      </div>
+        </div>
+      {/if}
     </div>
 
     <div class="sheet-block-v">
       <h2>Exploration Stats</h2>
-      
-      <table>
-        <tr>
-          <td></td>
-          <th>base</th>
-          <th>level</th>
-          <th>total</th>
-        </tr>
-        <tr>
-          <td><label for="stat-might-input">Might</label></td>
-          {#if $character.explorationStatGenMethod === StatGenMethodEnum.Manual}
-            <td><input id="stat-might-input" type="number" bind:value={$character.statGen_Manual[StatEnum.Might]}/></td>
-          {:else}
-            <td><input id="stat-might-input" type="text" value={$character.statGen_Roll[StatEnum.Might]} disabled/></td>
-          {/if}
-          <td><input type="number" bind:value={$character.statImprovements[StatEnum.Might]}/></td>
-          <td><input type="text" value={$character.GetStat(StatEnum.Might)} disabled/></td>
-        </tr>
-        <tr>
-          <td><label for="stat-artifice-input">Artifice</label></td>
-          {#if $character.explorationStatGenMethod === StatGenMethodEnum.Manual}
-            <td><input id="stat-artifice-input" type="number" bind:value={$character.statGen_Manual[StatEnum.Artifice]}/></td>
-          {:else}
-            <td><input id="stat-artifice-input" type="text" value={$character.statGen_Roll[StatEnum.Artifice]} disabled/></td>
-          {/if}
-          <td><input type="number" bind:value={$character.statImprovements[StatEnum.Artifice]}/></td>
-          <td><input type="text" value={$character.GetStat(StatEnum.Artifice)} disabled/></td>
-        </tr>
-        <tr>
-          <td><label for="stat-tuning-input">Tuning</label></td>
-          {#if $character.explorationStatGenMethod === StatGenMethodEnum.Manual}
-            <td><input id="stat-tuning-input" type="number" bind:value={$character.statGen_Manual[StatEnum.Tuning]}/></td>
-          {:else}
-            <td><input id="stat-tuning-input" type="text" value={$character.statGen_Roll[StatEnum.Tuning]} disabled/></td>
-          {/if}
-          <td><input type="number" bind:value={$character.statImprovements[StatEnum.Tuning]}/></td>
-          <td><input type="text" value={$character.GetStat(StatEnum.Tuning)} disabled/></td>
-        </tr>
-        <tr>
-          <td></td>
-          {#if $character.explorationStatGenMethod === StatGenMethodEnum.Manual}
-            <th> <span class:red={baseStatPoints != explorationPointSum}>{baseStatPoints - explorationPointSum}</span>/{baseStatPoints} </th>
-          {:else}
-            <td></td>
-          {/if}
-          <th> <span class:red={$character.StatPoints - baseStatPoints != explorationImprovementSum}>{$character.StatPoints - baseStatPoints - explorationImprovementSum}</span>/{$character.StatPoints - baseStatPoints} </th>
-          <td></td>
-        </tr>
-      </table>
 
       <div class="sheet-row">
         <div class="toggle-bg">
@@ -187,81 +149,220 @@
         </div>
       </div>
       
-      <div class="sheet-section">
-        {#if $character.explorationStatGenMethod === StatGenMethodEnum.Roll}
+      
+      <table class="point-table">
+        <tr>
+          <td></td>
+          {#each ExplorationStats as explorationStat}
+            <th>{explorationStat}</th>
+          {/each}
+        </tr>
+        <tr>
+          <th>
+            starting<br/>
+            {#if $character.explorationStatGenMethod === StatGenMethodEnum.Manual}
+              <span class:red={explorationPointSum != baseStatPoints}>{explorationPointSum}</span>/{baseStatPoints}
+            {:else if  $character.explorationStatGenMethod === StatGenMethodEnum.Roll}
+              (rolled)
+            {/if}
+          </th>
+          {#each ExplorationStats as explorationStat}
+            <td>
+              {#if $character.explorationStatGenMethod === StatGenMethodEnum.Manual}
+                <IntSelect bind:value={$character.statGen_Manual[explorationStat]} min={-1} max={5} />
+              {:else}
+                <TextBox id="stat-{explorationStat}-input" value={$character.statGen_Roll[explorationStat]} disabled/>
+              {/if}
+            </td>
+          {/each}
+        </tr>
+        <tr>
+          <th>points<br><span class:red={$character.StatPoints - baseStatPoints != explorationImprovementSum}>{explorationImprovementSum}</span>/{$character.StatPoints - baseStatPoints}</th>
+          {#each ExplorationStats as explorationStat}
+            {@const stat = $character.explorationStatGenMethod === StatGenMethodEnum.Manual ? $character.statGen_Manual[explorationStat] : ($character.statGen_Roll[explorationStat]??-1) }
+            <td>
+              <IntSelect bind:value={$character.statImprovements[explorationStat]} min={0} max={5-stat} />
+            </td>
+          {/each}
+        </tr>
+        <tr>
+          <th class="row-header">total</th>
+          {#each ExplorationStats as explorationStat}
+            <td><TextBox value={$character.GetStat(StatEnum.Candor)} disabled/></td>
+          {/each}
+        </tr>
+      </table>
+
+      {#if $character.explorationStatGenMethod === StatGenMethodEnum.Roll}
+        <div class="sheet-section">
           <div class="sheet-row">
             <button on:click={rollExplorationStats}>{explorationPointSum != baseStatPoints?"":"Re-"}Roll {baseStatPoints}d3</button> =&gt; <input type="string" style="width: {baseStatPoints*1.2}em;" value={ rawExplorationRollsString } disabled/>
           </div>
-        {/if}
-      </div>
+        </div>
+      {/if}
     </div>
+  </div>
+</div>
+  
+
+<div class="sheet-block">
+  <h2>Social Skills</h2>
+
+  <div class="sheet-block-v">
+    <p> Points Spent: <span class:red={$character.SocialSkillPoints != socialSkillPointSum}>{socialSkillPointSum}</span>/{$character.SocialSkillPoints}
+    
+    <table style="margin:0px;" class="point-table">
+      <tr>
+        <td></td>
+        {#each SocialStats as stat}
+          <th>{stat}&nbsp;<TextBox value={$character.GetStat(stat)} disabled /></th>
+        {/each}
+      </tr>
+      <tr>
+        <th>
+          Major*<br>
+          <span class:red={majorSocialSkillPointSum > majorSocialSkillPointsAvailable}>{majorSocialSkillPointSum}</span>/{majorSocialSkillPointsAvailable}
+        </th>
+
+        {#each MajorSocialSkills as skill}
+          <td style="text-align: right;">
+            <label class="skill-label" for={skill+"-dropdown"}>
+              <span style="user-select: none;">{skill}</span>
+              <div>
+                <IntSelect id={skill+"-dropdown"} bind:value={$character.socialSkills[skill].points} max={2} />
+                <TextBox value={$character.GetSkill(skill)} disabled />
+              </div>
+            </label>
+          </td>
+        {/each}
+      </tr>
+      {#each chunk(MinorSocialSkills,3) as skillsChunk, i}
+        <tr>
+          {#if i == 0}
+            <th rowspan="2">Minor</th>
+          {/if}
+          {#each skillsChunk as skill}
+            <td style="text-align: right;">
+              <label class="skill-label" for={skill+"-dropdown"}>
+                <span style="user-select: none;">{skill}</span>
+                <div>
+                  <IntSelect id={skill+"-dropdown"} bind:value={$character.socialSkills[skill].points} max={2} />
+                  <TextBox value={$character.GetSkill(skill)} disabled />
+                </div>
+              </label>
+            </td>
+          {/each}
+        </tr>
+      {/each}
+    </table>
+    <p class:red={majorSocialSkillPointSum > majorSocialSkillPointsAvailable}>* You cannot spend more than half your skill points on Major Skills.</p>
+  </div>
+
+
+  <h2>Exploration Skills</h2>
+
+  <div class="sheet-block-v">
+    <p> Points Spent: <span class:red={$character.ExplorationSkillPoints != explorationSkillPointSum}>{explorationSkillPointSum}</span>/{$character.ExplorationSkillPoints}
+    
+    <table style="margin:0px;" class="point-table">
+      <tr>
+        <td></td>
+        {#each ExplorationStats as stat}
+          <th>{stat}</th>
+        {/each}
+      </tr>
+      {#each chunk(MajorExplorationSkills,3) as skillsChunk, i}
+        <tr>
+          {#if i == 0}
+            <th rowspan="2">
+              Major*<br>
+              <span class:red={majorExplorationSkillPointSum > majorExplorationSkillPointsAvailable}>{majorExplorationSkillPointSum}</span>/{majorExplorationSkillPointsAvailable}
+            </th>
+          {/if}
+          {#each skillsChunk as skill}
+            <td style="text-align: right;">
+              <label class="skill-label" for={skill+"-dropdown"}>
+                <span style="user-select: none;">{skill}</span>
+                <div>
+                  <IntSelect id={skill+"-dropdown"} bind:value={$character.explorationSkills[skill].points} max={2} />
+                  <TextBox value={$character.GetSkill(skill)} disabled />
+                </div>
+              </label>
+            </td>
+          {/each}
+        </tr>
+      {/each}
+      {#each chunk(MinorExplorationSkills,3) as skillsChunk, i}
+        <tr>
+          {#if i == 0}
+            <th rowspan="3">Minor</th>
+          {/if}
+          {#each skillsChunk as skill}
+            <td style="text-align: right;">
+              <label class="skill-label" for={skill+"-dropdown"}>
+                <span style="user-select: none;">{skill}</span>
+                <div>
+                  <IntSelect id={skill+"-dropdown"} bind:value={$character.explorationSkills[skill].points} max={2} />
+                  <TextBox value={$character.GetSkill(skill)} disabled />
+                </div>
+              </label>
+            </td>
+          {/each}
+        </tr>
+      {/each}
+    </table>
+    <p class:red={majorExplorationSkillPointSum > majorExplorationSkillPointsAvailable}>* You cannot spend more than half your skill points on Major Skills.</p>
   </div>
 </div>
 
 <style>
-.red {
-  color: red;
-}
+  .red {
+    color: var(--error-color);
+  }
 
-.sheet-block {
-  display: flex;
-  flex-flow: column;
-  align-items: center;
-  justify-content: center;
-  justify-items: center;
-  align-content: center;
-  text-align: left;
-}
+  .sheet-block {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    align-content: center;
+    text-align: left;
+  }
 
-.sheet-section {
-  display: flex;
-  flex-flow: column;
-  align-items: center;
-}
+  .sheet-section {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+  }
 
-.sheet-row {
-  display: flex;
-  flex-flow: row;
-  align-items: center;
-}
+  .sheet-row {
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+  }
 
-table {
-  margin-left: auto;
-  margin-right: auto;
-  padding: 8px;
-}
+  .skill-label {
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: right;
+    gap: 4px
+  }
 
-table td {
-  font-size: 12pt;
-  line-height: 12pt;
-  text-align: left;
-}
+  .skill-label > div {
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 4px;
+  }
 
-table input {
-  width: 3em;
-  text-align: center;
-}
-
-table > tr:first-of-type > th {
-  text-align: center;
-  font-size: 10pt;
-  line-height: 10pt;
-  padding: 5px;
-  border: solid 1px gray;
-  border-bottom: 0px;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-}
-
-table > tr:last-of-type > th {
-  text-align: center;
-  font-size: 10pt;
-  line-height: 10pt;
-  padding: 5px;
-  border: solid 1px gray;
-  border-top: 0px;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
-}
+  @media only screen and (max-width: 768px) {
+    .skill-label {
+      flex-direction: column;
+      justify-content: start;
+    }
+  }
 
 </style>

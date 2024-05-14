@@ -75,9 +75,13 @@ export class PlayerCharacter {
   public description: string = "";
 
   //## _ Level Trackers _
-  public experience: number = 0;
+  private _experience: number = 0;
+  public get experience() { return this._experience }
+  public set experience( n: number ) { this._experience = clamp(n, 0, 10) }
 
-  public level: number = 1;
+  private _level: number = 1;
+  public get level() { return this._level }
+  public set level( n: number ) { this._level = clamp(n, 1, 20) }
   public readonly levelTrackerPerks: {[reward: string]: Array<number>} = {
     StatPoints:             [5, 0, 1, 0, 1,  0, 1, 0, 1, 0,  1, 0, 1, 0, 1,  0, 1, 0, 1, 1],
     SocialSkillPoints:      [5, 0, 0, 1, 0,  0, 0, 1, 0, 0,  0, 1, 0, 0, 0,  1, 0, 0, 0, 0],
@@ -88,7 +92,7 @@ export class PlayerCharacter {
     PrestigeFeatPoints:     [0, 0, 0, 0, 1,  0, 0, 0, 0, 1,  0, 0, 0, 0, 1,  0, 0, 1, 0, 1],
   }
   public readonly allLevelPerks = _reverseRewards(this.levelTrackerPerks);
-  private get levelPerks() { return this.allLevelPerks[clamp(this.level-1, 0, 19)] }
+  private get levelPerks() { return this.allLevelPerks[clamp(this._level-1, 0, 19)] }
   public get StatPoints() { return this.levelPerks.StatPoints; }
   public get SocialSkillPoints() { return this.levelPerks.SocialSkillPoints; }
   public get ExplorationSkillPoints() { return this.levelPerks.ExplorationSkillPoints; }
@@ -164,10 +168,10 @@ export class PlayerCharacter {
   //# ____ Stat Generation ____
   public socialStatGenMethod: StatGenMethodEnum = StatGenMethodEnum.Manual;
   public explorationStatGenMethod: StatGenMethodEnum = StatGenMethodEnum.Manual;
-  public readonly statGen_Roll: { [Keys in StatEnum]?: number } = { }
-  public readonly statGen_Manual: { [Keys in StatEnum]?: number } = { }
+  public readonly statGen_Roll: { [Keys in StatEnum]?: number } = {}
+  public readonly statGen_Manual: { [Keys in StatEnum]: number } = { Candor: -1, Conscious: -1, Cunning: -1, Might: -1, Artifice: -1, Tuning: -1 }
 
-  public readonly statImprovements: { [Keys in StatEnum]?: number } = { }
+  public readonly statImprovements: { [Keys in StatEnum]: number } = { Candor: 0, Conscious: 0, Cunning: 0, Might: 0, Artifice: 0, Tuning: 0 }
 
   public GetBaseStat( stat: StatEnum ): number {
     let genMethod = SocialStats.includes(stat) ? this.socialStatGenMethod : this.explorationStatGenMethod;

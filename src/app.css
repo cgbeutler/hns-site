@@ -2,6 +2,7 @@
   color-scheme: dark;
   color: #FDF6E3;
   --main-color: #FDF6E3;
+  --error-color: #ff7070;
   background-color: black;
   background-position: center;
   background-attachment: fixed;

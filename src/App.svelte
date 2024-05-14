@@ -3,7 +3,6 @@
   import { Router, Route } from 'svelte-routing';
   import { Modals, closeModal, openModal } from 'svelte-modals'
   import NavModal from './lib/NavModal.svelte';
-  import NavMenu from "./lib/NavMenu.svelte";
 
   import Account from './routes/account/Account.svelte';
   import AgeRoller from "./routes/dice/ageroller/AgeRoller.svelte";
@@ -14,7 +13,7 @@
   import Home from "./routes/Home.svelte";
   import NotFound from './routes/NotFound.svelte';
   import Srd from './routes/srd/Srd.svelte';
-    import Login from './routes/login/Login.svelte';
+  import Login from './routes/login/Login.svelte';
 
   let viewWidth = 0;
 

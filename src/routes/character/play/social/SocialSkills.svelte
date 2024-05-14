@@ -70,6 +70,7 @@
   grid-column-end: 4;
   border-top: 2px solid #181818;
   border-radius: 14px 14px 2px 2px;
+  box-shadow: none;
 }
 
 .skill-grid > h4:first-child {

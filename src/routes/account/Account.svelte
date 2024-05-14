@@ -197,6 +197,6 @@
   }
 
   .red-outline {
-    outline: 2px solid rgba(255, 0, 0, 0.473);
+    outline: 2px solid var(--error-color);
   }
 </style>
