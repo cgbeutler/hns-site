@@ -195,10 +195,10 @@ export class PlayerCharacter {
   public get Tuning() { return this.GetStat( StatEnum.Tuning ); }
 
   // ____ Skills ____
-  public GetSkill( skill: SocialSkillEnum|ExplorationSkillEnum ): number {
+  public GetSkill( skill: SocialSkillEnum|ExplorationSkillEnum, includeInspiration: boolean = true ): number {
     var skillData = this.socialSkills[skill] ?? this.explorationSkills[skill];
     if (!skillData) { console.error("Unknown Skill"); return -2; }
-    let improvements = (skillData.points ?? 0) + (skillData.inspiration ? 1 : 0);
+    let improvements = (skillData.points ?? 0) + (includeInspiration && skillData.inspiration ? 1 : 0);
     if (skillData.overrideStat && Stats.includes(skillData.overrideStat)) {
       return this.GetStat(skillData.overrideStat) + improvements;
     }

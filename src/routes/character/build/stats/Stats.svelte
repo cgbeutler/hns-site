@@ -276,7 +276,7 @@
               <span style="user-select: none;">{skill}</span>
               <div>
                 <IntSelect id={skill+"-dropdown"} bind:value={$character.socialSkills[skill].points} max={2} />
-                <TextBox value={$character.GetSkill(skill)} disabled />
+                <TextBox value={$character.GetSkill(skill, false)} disabled />
               </div>
             </label>
           </td>
@@ -293,7 +293,7 @@
                 <span style="user-select: none;">{skill}</span>
                 <div>
                   <IntSelect id={skill+"-dropdown"} bind:value={$character.socialSkills[skill].points} max={2} />
-                  <TextBox value={$character.GetSkill(skill)} disabled />
+                  <TextBox value={$character.GetSkill(skill, false)} disabled />
                 </div>
               </label>
             </td>
@@ -331,7 +331,7 @@
                 <span style="user-select: none;">{skill}</span>
                 <div>
                   <IntSelect id={skill+"-dropdown"} bind:value={$character.explorationSkills[skill].points} max={2} />
-                  <TextBox value={$character.GetSkill(skill)} disabled />
+                  <TextBox value={$character.GetSkill(skill, false)} disabled />
                 </div>
               </label>
             </td>
@@ -349,7 +349,7 @@
                 <span style="user-select: none;">{skill}</span>
                 <div>
                   <IntSelect id={skill+"-dropdown"} bind:value={$character.explorationSkills[skill].points} max={2} />
-                  <TextBox value={$character.GetSkill(skill)} disabled />
+                  <TextBox value={$character.GetSkill(skill, false)} disabled />
                 </div>
               </label>
             </td>
