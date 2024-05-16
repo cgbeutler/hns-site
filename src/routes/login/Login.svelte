@@ -1,5 +1,5 @@
 <script>
-    import LoginBox from "../../lib/LoginBox.svelte";
+    import LoginBox from "../../lib/Slideouts/LoginBox.svelte";
 </script>
 
 <div id="login-page">

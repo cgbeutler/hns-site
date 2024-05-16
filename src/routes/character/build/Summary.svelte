@@ -27,137 +27,139 @@
 <div class="sheet-block">
   <h1><img src="/img/icons/PromotionIcon.svg" alt=""/> Level Builder <img src="/img/icons/PromotionIcon.svg" alt=""/></h1>
 
-  <div class="sheet-block-h">
-    <label class="label-h" style="line-height: 1em;">
-      Character Name:
-      <input class:needs-input={!$character.name} style="align-self: stretch;" placeholder="Unnamed Character" bind:value={$character.name}>
-    </label>
-  </div>
-
-  <div class="sheet-block-h">
-    <div class="sheet-block-v">
-      <h2 style="margin-bottom: 0;">Experience</h2>
-
-      <p style="font-size:14pt">[{#each {length: $character.experience} as _,i }◈{/each}{#each {length: 10-($character.experience)} as _,i }◇{/each}]</p>
-      <Spinner bind:value={$character.experience} min={0} max={10} maxAction={levelUp}>
-        <img slot="max-icon" src="/img/icons/PromotionIcon.svg" alt="Level Up"/>
-      </Spinner>
-
-
-      <h2>Level</h2>
-
-      <Spinner bind:value={$character.level} min={1} max={20} />
+  <div class="sheet-block-v">
+    <div class="sheet-block-h">
+      <label class="label-h" style="line-height: 1em;">
+        Character Name:
+        <input class:needs-input={!$character.name} style="align-self: stretch;" placeholder="Unnamed Character" bind:value={$character.name}>
+      </label>
     </div>
 
-    <div class="sheet-block-v">
-      <h2 style="margin-bottom: 0;">Archetype Levels</h2>
-      <table class="point-table">
-        <tr>
-          <td></td>
-          <th>To Spend<br>
-            {$character.warriorLevel + $character.specialistLevel + $character.casterLevel}/{$character.level + 5}
-          </th>
-        </tr>
-        <tr>
-          <td>Warrior</td>
-          <td><Spinner bind:value={$character.warriorLevel} min={0} max={maxArchetypeLevel} /></td>
-        </tr>
-        <tr>
-          <td>Specialist</td>
-          <td><Spinner bind:value={$character.specialistLevel} min={0} max={maxArchetypeLevel} /></td>
-        </tr>
-        <tr>
-          <td>Caster</td>
-          <td><Spinner bind:value={$character.casterLevel} min={0} max={maxArchetypeLevel} /></td>
-        </tr>
-      </table>
+    <div class="sheet-block-h">
+      <div class="sheet-block-v">
+        <h2 style="margin-bottom: 0;">Experience</h2>
+
+        <p style="font-size:14pt">[{#each {length: $character.experience} as _,i }◈{/each}{#each {length: 10-($character.experience)} as _,i }◇{/each}]</p>
+        <Spinner bind:value={$character.experience} min={0} max={10} maxAction={levelUp}>
+          <img slot="max-icon" src="/img/icons/PromotionIcon.svg" alt="Level Up"/>
+        </Spinner>
+
+
+        <h2>Level</h2>
+
+        <Spinner bind:value={$character.level} min={1} max={20} />
+      </div>
+
+      <div class="sheet-block-v">
+        <h2 style="margin-bottom: 0;">Archetype Levels</h2>
+        <table class="point-table">
+          <tr>
+            <td></td>
+            <th>To Spend<br>
+              {$character.warriorLevel + $character.specialistLevel + $character.casterLevel}/{$character.level + 5}
+            </th>
+          </tr>
+          <tr>
+            <td>Warrior</td>
+            <td><Spinner bind:value={$character.warriorLevel} min={0} max={maxArchetypeLevel} /></td>
+          </tr>
+          <tr>
+            <td>Specialist</td>
+            <td><Spinner bind:value={$character.specialistLevel} min={0} max={maxArchetypeLevel} /></td>
+          </tr>
+          <tr>
+            <td>Caster</td>
+            <td><Spinner bind:value={$character.casterLevel} min={0} max={maxArchetypeLevel} /></td>
+          </tr>
+        </table>
+      </div>
     </div>
-  </div>
 
 
-  <h2>Upcoming Perks</h2>
+    <h2>Upcoming Perks</h2>
 
-  <div id="level-tracker">
-    <div class="tracker-cell-label"> Character Level </div>
-    
-    {#each {length: 20} as _,i }
-      <div class="tracker-cell-level" class:level-reached={(i+1)<=$character.level}>{i+1}</div>
-    {/each}
-    <div class="tracker-cell-total">Total</div>
-    
-    {#each Object.entries($character.levelTrackerPerks) as [reward, levelArray]}
-      <div class="tracker-cell-label">{reward}</div>
-      {#each levelArray as n, i }
-        <div class="tracker-cell-reward" class:level-reached={(i+1)<=$character.level}>{n > 0 ? n : ""}</div>
+    <div id="level-tracker">
+      <div class="tracker-cell-label"> Character Level </div>
+      
+      {#each {length: 20} as _,i }
+        <div class="tracker-cell-level" class:level-reached={(i+1)<=$character.level}>{i+1}</div>
       {/each}
-      <div class="tracker-cell-total">{$character.lookup(reward)}</div>
-    {/each}
-  </div>
-
-
-  <h4>Warrior</h4>
-
-  <div id="arch-level-tracker">
-    <div class="tracker-cell-label"> Warrior Level </div>
-    
-    {#each {length: 16} as _,i }
-      <div class="tracker-cell-level" class:level-reached={i<=$character.warriorLevel}>{i}</div>
-    {/each}
-    <div class="tracker-cell-total">Total</div>
-    
-    {#each Object.entries($character.warriorTrackerPerks) as [reward, arr]}
-      <div class="tracker-cell-label">{reward}</div>
-      {#each arr as n, i }
-        <div class="tracker-cell-reward" class:level-reached={i<=$character.warriorLevel}>{
-          i == 0 ? ($character.lookup("Starting" + reward)??0) + n : n > 0 ? n : ""
-        }</div>
+      <div class="tracker-cell-total">Total</div>
+      
+      {#each Object.entries($character.levelTrackerPerks) as [reward, levelArray]}
+        <div class="tracker-cell-label">{reward}</div>
+        {#each levelArray as n, i }
+          <div class="tracker-cell-reward" class:level-reached={(i+1)<=$character.level}>{n > 0 ? n : ""}</div>
+        {/each}
+        <div class="tracker-cell-total">{$character.lookup(reward)}</div>
       {/each}
-      <div class="tracker-cell-total">{$character.lookup(reward)}</div>
-    {/each}
-  </div>
+    </div>
 
 
-  <h4>Specialist</h4>
+    <h4>Warrior</h4>
 
-  <div id="arch-level-tracker">
-    <div class="tracker-cell-label"> Specialist Level </div>
-    
-    {#each {length: 16} as _,i }
-      <div class="tracker-cell-level" class:level-reached={i<=$character.specialistLevel}>{i}</div>
-    {/each}
-    <div class="tracker-cell-total">Total</div>
-    
-    {#each Object.entries($character.specialistTrackerPerks) as [reward, arr]}
-      <div class="tracker-cell-label">{reward}</div>
-      {#each arr as n, i }
-        <div class="tracker-cell-reward" class:level-reached={i<=$character.specialistLevel}>{
-          i == 0 ? ($character.lookup("Starting" + reward)??0) + n : n > 0 ? n : ""
-        }</div>
+    <div id="arch-level-tracker">
+      <div class="tracker-cell-label"> Warrior Level </div>
+      
+      {#each {length: 16} as _,i }
+        <div class="tracker-cell-level" class:level-reached={i<=$character.warriorLevel}>{i}</div>
       {/each}
-      <div class="tracker-cell-total">{$character.lookup(reward)}</div>
-    {/each}
-  </div>
-
-
-  <h4>Caster</h4>
-
-  <div id="arch-level-tracker">
-    <div class="tracker-cell-label"> Caster Level </div>
-    
-    {#each {length: 16} as _,i }
-      <div class="tracker-cell-level" class:level-reached={i<=$character.casterLevel}>{i}</div>
-    {/each}
-    <div class="tracker-cell-total">Total</div>
-    
-    {#each Object.entries($character.casterTrackerPerks) as [reward, arr]}
-      <div class="tracker-cell-label">{reward}</div>
-      {#each arr as n, i }
-        <div class="tracker-cell-reward" class:level-reached={i<=$character.casterLevel}>{
-          i == 0 ? ($character.lookup("Starting" + reward)??0) + n : n > 0 ? n : ""
-        }</div>
+      <div class="tracker-cell-total">Total</div>
+      
+      {#each Object.entries($character.warriorTrackerPerks) as [reward, arr]}
+        <div class="tracker-cell-label">{reward}</div>
+        {#each arr as n, i }
+          <div class="tracker-cell-reward" class:level-reached={i<=$character.warriorLevel}>{
+            i == 0 ? ($character.lookup("Starting" + reward)??0) + n : n > 0 ? n : ""
+          }</div>
+        {/each}
+        <div class="tracker-cell-total">{$character.lookup(reward)}</div>
       {/each}
-      <div class="tracker-cell-total">{$character.lookup(reward)}</div>
-    {/each}
+    </div>
+
+
+    <h4>Specialist</h4>
+
+    <div id="arch-level-tracker">
+      <div class="tracker-cell-label"> Specialist Level </div>
+      
+      {#each {length: 16} as _,i }
+        <div class="tracker-cell-level" class:level-reached={i<=$character.specialistLevel}>{i}</div>
+      {/each}
+      <div class="tracker-cell-total">Total</div>
+      
+      {#each Object.entries($character.specialistTrackerPerks) as [reward, arr]}
+        <div class="tracker-cell-label">{reward}</div>
+        {#each arr as n, i }
+          <div class="tracker-cell-reward" class:level-reached={i<=$character.specialistLevel}>{
+            i == 0 ? ($character.lookup("Starting" + reward)??0) + n : n > 0 ? n : ""
+          }</div>
+        {/each}
+        <div class="tracker-cell-total">{$character.lookup(reward)}</div>
+      {/each}
+    </div>
+
+
+    <h4>Caster</h4>
+
+    <div id="arch-level-tracker">
+      <div class="tracker-cell-label"> Caster Level </div>
+      
+      {#each {length: 16} as _,i }
+        <div class="tracker-cell-level" class:level-reached={i<=$character.casterLevel}>{i}</div>
+      {/each}
+      <div class="tracker-cell-total">Total</div>
+      
+      {#each Object.entries($character.casterTrackerPerks) as [reward, arr]}
+        <div class="tracker-cell-label">{reward}</div>
+        {#each arr as n, i }
+          <div class="tracker-cell-reward" class:level-reached={i<=$character.casterLevel}>{
+            i == 0 ? ($character.lookup("Starting" + reward)??0) + n : n > 0 ? n : ""
+          }</div>
+        {/each}
+        <div class="tracker-cell-total">{$character.lookup(reward)}</div>
+      {/each}
+    </div>
   </div>
 </div>
 

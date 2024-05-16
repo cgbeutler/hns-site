@@ -3,7 +3,6 @@
   import { Router, Route } from 'svelte-routing';
   import { Modals, closeModal, openModal } from 'svelte-modals'
   import { SvelteToast } from '@zerodevx/svelte-toast'
-  import NavModal from './lib/NavModal.svelte';
 
   import Account from './routes/account/Account.svelte';
   import Character from './routes/character/Character.svelte';
@@ -12,6 +11,7 @@
   import NotFound from './routes/NotFound.svelte';
   import Srd from './routes/srd/Srd.svelte';
   import Login from './routes/login/Login.svelte';
+    import NavModal from './lib/Slideouts/NavModal.svelte';
 
   let viewWidth = 0;
 

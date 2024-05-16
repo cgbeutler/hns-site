@@ -6,10 +6,8 @@
   import type { Writable } from 'svelte/store';
   import type { PlayerCharacter } from '../../lib/Character/PlayerCharacter';
   import Build from './build/Build.svelte';
-  import CharacterMenu from '../../lib/CharacterMenu.svelte';
+  import CharacterMenu from '../../lib/Slideouts/CharacterMenu.svelte';
   import Play from './play/Play.svelte';
-    import { openModal } from 'svelte-modals';
-    import NavModal from '../../lib/NavModal.svelte';
 
   export let id: string = NIL;
   let character: Writable<PlayerCharacter>;
@@ -39,9 +37,8 @@
     <p>{error}</p>
     <Link to="/characters">Return to Characters List</Link>
   {:else}
-    <button id="nav-button" on:click={()=>openModal(NavModal)}><img src="/img/HnsSmall.svg" alt="H&S"></button>
 
-    <CharacterMenu bind:id={id} />
+    <CharacterMenu bind:id={id} slim />
 
     <div id="character-page-content">
       <Router>

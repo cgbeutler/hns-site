@@ -27,12 +27,20 @@
     if ($character.statGen_Manual[StatEnum.Candor] == null) $character.statGen_Manual[StatEnum.Candor] = -1;
     if ($character.statGen_Manual[StatEnum.Conscious] == null) $character.statGen_Manual[StatEnum.Conscious] = -1;
     if ($character.statGen_Manual[StatEnum.Cunning] == null) $character.statGen_Manual[StatEnum.Cunning] = -1;
-    socialPointSum = 3 + ($character.statGen_Manual[StatEnum.Candor]??-1) + ($character.statGen_Manual[StatEnum.Conscious]??-1) + ($character.statGen_Manual[StatEnum.Cunning]??-1);
+    socialPointSum = 3
+      + ($character.statGen_Manual[StatEnum.Candor]??-1)
+      + ($character.statGen_Manual[StatEnum.Conscious]??-1)
+      + ($character.statGen_Manual[StatEnum.Cunning]??-1);
   } else {
-    socialPointSum = 3 + ($character.statGen_Roll[StatEnum.Candor]??-1) + ($character.statGen_Roll[StatEnum.Conscious]??-1) + ($character.statGen_Roll[StatEnum.Cunning]??-1);
+    socialPointSum = 3
+      + ($character.statGen_Roll[StatEnum.Candor]??-1)
+      + ($character.statGen_Roll[StatEnum.Conscious]??-1)
+      + ($character.statGen_Roll[StatEnum.Cunning]??-1);
   }
   let socialImprovementSum = 0;
-  $: socialImprovementSum = ($character.statImprovements.Candor??0) + ($character.statImprovements.Conscious??0) + ($character.statImprovements.Cunning??0);
+  $: socialImprovementSum = ($character.statImprovements.Candor??0)
+    + ($character.statImprovements.Conscious??0)
+    + ($character.statImprovements.Cunning??0);
 
   let rawExplorationRolls: Array<number> | undefined;
   let rawExplorationRollsString: string = "";
@@ -50,26 +58,44 @@
     if ($character.statGen_Manual[StatEnum.Might] == null) $character.statGen_Manual[StatEnum.Might] = -1;
     if ($character.statGen_Manual[StatEnum.Artifice] == null) $character.statGen_Manual[StatEnum.Artifice] = -1;
     if ($character.statGen_Manual[StatEnum.Tuning] == null) $character.statGen_Manual[StatEnum.Tuning] = -1;
-    explorationPointSum = 3 + ($character.statGen_Manual[StatEnum.Might]??-1) + ($character.statGen_Manual[StatEnum.Artifice]??-1) + ($character.statGen_Manual[StatEnum.Tuning]??-1);
+    explorationPointSum = 3
+      + ($character.statGen_Manual[StatEnum.Might]??-1)
+      + ($character.statGen_Manual[StatEnum.Artifice]??-1)
+      + ($character.statGen_Manual[StatEnum.Tuning]??-1);
   } else {
-    explorationPointSum = 3 + ($character.statGen_Roll[StatEnum.Might]??-1) + ($character.statGen_Roll[StatEnum.Artifice]??-1) + ($character.statGen_Roll[StatEnum.Tuning]??-1);
+    explorationPointSum = 3
+      + ($character.statGen_Roll[StatEnum.Might]??-1)
+      + ($character.statGen_Roll[StatEnum.Artifice]??-1)
+      + ($character.statGen_Roll[StatEnum.Tuning]??-1);
   }
   let explorationImprovementSum = 0;
-  $: explorationImprovementSum = ($character.statImprovements.Might??0) + ($character.statImprovements.Artifice??0) + ($character.statImprovements.Tuning??0);
+  $: explorationImprovementSum = ($character.statImprovements.Might??0)
+    + ($character.statImprovements.Artifice??0)
+    + ($character.statImprovements.Tuning??0);
 
   let majorSocialSkillPointsAvailable: number = 0;
   $: majorSocialSkillPointsAvailable = Math.floor( $character.SocialSkillPoints / 2 );
   let majorSocialSkillPointSum: number = 0;
-  $: majorSocialSkillPointSum = Object.entries($character.socialSkills).filter(e => MajorSocialSkills.includes(<SocialSkillEnum>e[0])).reduce((sum, entry) => sum + entry[1].points, 0);
+  $: majorSocialSkillPointSum = Object
+    .entries($character.socialSkills)
+    .filter(e => MajorSocialSkills.includes(<SocialSkillEnum>e[0]))
+    .reduce((sum, entry) => sum + entry[1].points, 0);
   let socialSkillPointSum: number = 0;
-  $: socialSkillPointSum = Object.entries($character.socialSkills).reduce((sum, entry) => sum + entry[1].points, 0);
+  $: socialSkillPointSum = Object
+    .entries($character.socialSkills)
+    .reduce((sum, entry) => sum + entry[1].points, 0);
   
   let majorExplorationSkillPointsAvailable: number = 0;
   $: majorExplorationSkillPointsAvailable = Math.floor( $character.ExplorationSkillPoints / 2 );
   let majorExplorationSkillPointSum: number = 0;
-  $: majorExplorationSkillPointSum = Object.entries($character.explorationSkills).filter(e => MajorExplorationSkills.includes(<ExplorationSkillEnum>e[0])).reduce((sum, entry) => sum + entry[1].points, 0);
+  $: majorExplorationSkillPointSum = Object
+    .entries($character.explorationSkills)
+    .filter(e => MajorExplorationSkills.includes(<ExplorationSkillEnum>e[0]))
+    .reduce((sum, entry) => sum + entry[1].points, 0);
   let explorationSkillPointSum: number = 0;
-  $: explorationSkillPointSum = Object.entries($character.explorationSkills).reduce((sum, entry) => sum + entry[1].points, 0);
+  $: explorationSkillPointSum = Object
+    .entries($character.explorationSkills)
+    .reduce((sum, entry) => sum + entry[1].points, 0);
     
 </script>
 
@@ -114,7 +140,10 @@
           {/each}
         </tr>
         <tr>
-          <th>points<br><span class:red={$character.StatPoints - baseStatPoints != socialImprovementSum}>{socialImprovementSum}</span>/{$character.StatPoints - baseStatPoints}</th>
+          <th>
+            points<br>
+            <span class:red={$character.StatPoints - baseStatPoints != socialImprovementSum}>{socialImprovementSum}</span>/{$character.StatPoints - baseStatPoints}
+          </th>
           {#each SocialStats as socialStat}
             {@const stat = $character.socialStatGenMethod === StatGenMethodEnum.Manual ? $character.statGen_Manual[socialStat] : ($character.statGen_Roll[socialStat]??-1) }
             <td>
@@ -125,7 +154,9 @@
         <tr>
           <th class="row-header">total</th>
           {#each SocialStats as socialStat}
-            <td><TextBox value={$character.GetStat(StatEnum.Candor)} disabled/></td>
+            <td>
+              <TextBox value={$character.GetStat(socialStat)} disabled/>
+            </td>
           {/each}
         </tr>
       </table>
@@ -133,7 +164,11 @@
       {#if $character.socialStatGenMethod === StatGenMethodEnum.Roll}
         <div class="sheet-section">
           <div class="sheet-row">
-            <button on:click={rollSocialStats}>{socialPointSum != baseStatPoints?"":"Re-"}Roll {baseStatPoints}d3</button> =&gt; <input type="string" style="width: {baseStatPoints*1.2}em;" value={ rawSocialRollsString } disabled/>
+            <button on:click={rollSocialStats}>
+              {socialPointSum != baseStatPoints?"":"Re-"}Roll {baseStatPoints}d3
+            </button>
+            &nbsp;=&gt;&nbsp;
+            <input type="string" style="width: {baseStatPoints*1.2}em;" value={ rawSocialRollsString } disabled/>
           </div>
         </div>
       {/if}
@@ -177,7 +212,10 @@
           {/each}
         </tr>
         <tr>
-          <th>points<br><span class:red={$character.StatPoints - baseStatPoints != explorationImprovementSum}>{explorationImprovementSum}</span>/{$character.StatPoints - baseStatPoints}</th>
+          <th>
+            points<br>
+            <span class:red={$character.StatPoints - baseStatPoints != explorationImprovementSum}>{explorationImprovementSum}</span>/{$character.StatPoints - baseStatPoints}
+          </th>
           {#each ExplorationStats as explorationStat}
             {@const stat = $character.explorationStatGenMethod === StatGenMethodEnum.Manual ? $character.statGen_Manual[explorationStat] : ($character.statGen_Roll[explorationStat]??-1) }
             <td>
@@ -188,7 +226,9 @@
         <tr>
           <th class="row-header">total</th>
           {#each ExplorationStats as explorationStat}
-            <td><TextBox value={$character.GetStat(StatEnum.Candor)} disabled/></td>
+            <td>
+              <TextBox value={$character.GetStat(explorationStat)} disabled/>
+            </td>
           {/each}
         </tr>
       </table>
@@ -196,7 +236,11 @@
       {#if $character.explorationStatGenMethod === StatGenMethodEnum.Roll}
         <div class="sheet-section">
           <div class="sheet-row">
-            <button on:click={rollExplorationStats}>{explorationPointSum != baseStatPoints?"":"Re-"}Roll {baseStatPoints}d3</button> =&gt; <input type="string" style="width: {baseStatPoints*1.2}em;" value={ rawExplorationRollsString } disabled/>
+            <button on:click={rollExplorationStats}>
+              {explorationPointSum != baseStatPoints?"":"Re-"}Roll {baseStatPoints}d3
+            </button>
+            &nbsp;=&gt;&nbsp;
+            <input type="string" style="width: {baseStatPoints*1.2}em;" value={ rawExplorationRollsString } disabled/>
           </div>
         </div>
       {/if}
@@ -215,7 +259,9 @@
       <tr>
         <td></td>
         {#each SocialStats as stat}
-          <th>{stat}&nbsp;<TextBox value={$character.GetStat(stat)} disabled /></th>
+          <th>
+            {stat}&nbsp;<TextBox value={$character.GetStat(stat)} disabled />
+          </th>
         {/each}
       </tr>
       <tr>

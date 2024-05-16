@@ -6,6 +6,7 @@
   import Social from './social/Social.svelte';
   import Exploration from './exploration/Exploration.svelte';
   import Summary from './Summary.svelte';
+    import Abilities from './abilities/Abilities.svelte';
 
   export let id: string;
   export let character: Writable<PlayerCharacter>;
@@ -33,6 +34,7 @@
     <Route path="/"> <Summary bind:id={id} bind:character={character}/> </Route>
     <Route path="/social"> <Social bind:character={character}/> </Route>
     <Route path="/exploration"> <Exploration bind:character={character}/> </Route>
+    <Route path="/abilities"> <Abilities bind:character={character}/> </Route>
   </Router>
   
 {/if}

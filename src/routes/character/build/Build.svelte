@@ -6,7 +6,7 @@
   import Summary from './Summary.svelte';
   import Stats from './stats/Stats.svelte';
   import Feats from './feats/Feats.svelte';
-    import Persona from './persona/Persona.svelte';
+    import Persona from '../notes/persona/Persona.svelte';
 
   export let id: string;
   export let character: Writable<PlayerCharacter>;

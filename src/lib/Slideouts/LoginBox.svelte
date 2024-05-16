@@ -1,6 +1,6 @@
 <script lang="ts">
   import { navigate } from 'svelte-routing';
-  import { account } from "./stores";
+  import { account } from "../stores";
   
   let nameOrEmail = "";
   let password = "";

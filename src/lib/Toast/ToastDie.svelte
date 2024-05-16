@@ -1,3 +1,13 @@
+<svelte:head>
+  {#each [
+    '/img/dice/d2.svg', '/img/dice/d4.svg', '/img/dice/d6.svg', '/img/dice/d8.svg', '/img/dice/d10.svg', '/img/dice/d12.svg', '/img/dice/d20.svg',
+    '/img/dice/d4-inverted.svg', '/img/dice/d6-inverted.svg', '/img/dice/d20-inverted.svg',
+    '/img/dice/roll-0.svg', '/img/dice/roll-2.svg', '/img/dice/roll-1.svg', '/img/dice/roll-3.svg', '/img/dice/roll-5.svg', '/img/dice/roll-4.svg', '/img/dice/roll-shine.svg'
+  ] as image}
+  <link rel="preload" as="image" href={image} />
+  {/each}
+</svelte:head>
+
 <script lang="ts">
   import { onMount } from "svelte";
 
@@ -8,12 +18,6 @@
 
   let die: HTMLDivElement;
   let overlayAnim: HTMLDivElement;
-
-  function _roll() {
-    if (faces > 0) result = Math.floor( Math.random() * faces ) + 1;
-    else if (faces < 0) result = Math.floor( Math.random() * faces ) - 1;
-    else result = 0;
-  }
   
   let hideDie: boolean = false;
   let timeout: number | undefined;
@@ -23,11 +27,13 @@
     overlayAnim.style.animation = 'none';
     overlayAnim.offsetHeight; //needed hack
 
-    // Start anims
+    // Start animations
+    const duration = 1.5;
+    const rollPortion = 0.42;
     let delay = Math.random() * 0.1;
     overlayAnim.style.animation = null!;
-    overlayAnim.style.animationDuration = '1s';
-    overlayAnim.style.animationDelay = "-" + delay + "s";
+    overlayAnim.style.animationDuration = `${duration}s`;
+    overlayAnim.style.animationDelay = `-${delay}s`;
     overlayAnim.offsetHeight; //needed hack
     
     if (timeout) { clearTimeout(timeout); timeout = undefined; }
@@ -38,8 +44,12 @@
       die.style.animation = null!;
       die.offsetHeight; //needed hack
       hideDie = false;
-      _roll();
-    }, (0.42 - delay)*1000)
+
+      // Roll the Die
+      if (faces > 0) result = Math.floor( Math.random() * faces ) + 1;
+      else if (faces < 0) result = Math.floor( Math.random() * faces ) - 1;
+      else result = 0;
+    }, ((duration*rollPortion) - delay)*1000)
   }
 
   onMount(() => {
@@ -56,7 +66,7 @@
     "
     >
     {hideDie ? "" : result == null || result == Infinity ? "?" : result}
-    <div bind:this={overlayAnim} class="overlay-anim" on:animationstart={()=>{console.log("start")}} on:animationend={()=>{console.log("end")}}></div>
+    <div bind:this={overlayAnim} class="overlay-anim" on:animationstart={()=>{console.log("start")}} on:animationend={()=>{console.log("end")}} />
   </div>
 </div>
 
