@@ -23,7 +23,7 @@
   "dependencies": {
     "copyfiles": "^2.4.1",
     "dotenv": "^16.4.5",
-    "js-yaml": "^4.1.0",
+    "js-yaml": "^4.1.1",
     "lodash-es": "^4.17.21",
     "npm-check-updates": "^16.14.20",
     "svelte-local-storage-store": "^0.6.4",
